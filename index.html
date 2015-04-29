@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>eBay Searcher</title>
+    <link rel="stylesheet" href="js/libs/bootstrap/dist/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width,user-scalable=0,maximum-scale=1.0">
+    <style>
+        .summary {
+            font-weight: bold;
+            font-size: 1.1em;
+            background: mediumseagreen;
+            color: whitesmoke;
+            overflow: auto;
+        }
+
+        .summary > div {
+            width: 40%;
+            float: left;
+            margin: 5%;
+        }
+    </style>
+</head>
+<body>
+    <div ng-app="ebay-searcher">
+        <div ng-controller="SearchCtrl" class="container-fluid">
+            <form ng-submit="showSoldListings()">
+                <div class="input-group">
+                    <input type="search" class="form-control" ng-model="q" placeholder="Search Keywords">
+                    <span class="input-group-btn">
+                        <button class="btn btn-info" type="button" ng-click="showSoldListings()">Search</button>
+                    </span>
+                </div>
+            </form>
+            <div class="listings" ng-if="soldListings.length > 0">
+                <div class="summary">
+                    <div>Average: {{ averageSalePrice | currency:'$' }}</div>
+                    <div>Common Price: {{ commonSalePrice }}</div>
+                </div>
+                <table class="table">
+                    <tr ng-repeat="listing in soldListings">
+                        <td ng-click="viewListing(listing)"><img class="img-responsive" ng-src="{{ ::listing.imageUrl }}"></td>
+                        <td>
+                            <p><strong>{{ ::listing.name }}</strong></p>
+                            <p>{{ ::listing.date }}</p>
+                        </td>
+                        <td>{{ ::listing.price | currency:'$' }}</p></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="js/libs/jquery/dist/jquery.min.js"></script>
+    <script src="js/libs/angular/angular.min.js"></script>
+    <script src="js/libs/moment/moment.js"></script>
+    <script src="js/ebay-searcher.js"></script>
+    <script src="js/ctrl/SearchCtrl.js"></script>
+</body>
+</html>
