@@ -6,24 +6,30 @@
             $scope.q = '';
 
             $scope.showSoldListings = function() {
+                $('[ng-model="q"]').blur();
                 return $http.jsonp("http://svcs.ebay.com/services/search/FindingService/v1" +
-                    "?OPERATION-NAME=findCompletedItems" +
-                    "&SERVICE-VERSION=1.0.0" +
-                    "&SECURITY-APPNAME=DillonCh-4ce2-442c-b779-8d0905e2d5e4" +
-                    "&GLOBAL-ID=EBAY-US" +
-                    "&RESPONSE-DATA-FORMAT=JSON" +
-                    "&callback=JSON_CALLBACK" +
-                    "&REST-PAYLOAD" +
-                    "&itemFilter(0).name=SoldItemsOnly" +
-                    "&itemFilter(0).value=true" +
-                    "&paginationInput.entriesPerPage=100" +
-                    "&sortOrder=PricePlusShippingHighest" +
-                    "&keywords=" + encodeURIComponent($scope.q))
+                        "?OPERATION-NAME=findCompletedItems" +
+                        "&SERVICE-VERSION=1.0.0" +
+                        "&SECURITY-APPNAME=DillonCh-4ce2-442c-b779-8d0905e2d5e4" +
+                        "&GLOBAL-ID=EBAY-US" +
+                        "&RESPONSE-DATA-FORMAT=JSON" +
+                        "&callback=JSON_CALLBACK" +
+                        "&REST-PAYLOAD" +
+                        "&itemFilter(0).name=SoldItemsOnly" +
+                        "&itemFilter(0).value=true" +
+                        "&itemFilter(1).name=HideDuplicateItems" +
+                        "&itemFilter(1).value=true" +
+                        "&paginationInput.entriesPerPage=100" +
+                        "&sortOrder=PricePlusShippingHighest" +
+                        "&categoryId=267" +
+                        "&keywords=" + encodeURIComponent($scope.q))
                     .then(function(response) {
                         var listings = response.data.findCompletedItemsResponse[0].searchResult[0].item
                             .filter(function(listing) {
-                                return !!listing.primaryCategory[0].categoryName[0].match(/Other|Antiquarian|Fiction|Literature|Book|Children/i)
-                                    && (!!$scope.q.match(/signed|inscribed/) || !listing.title[0].match(/signed|inscribed/i));
+                                var signed = /signed|inscribed|autograph/i;
+                                var lot = /set|lot/i;
+                                return (!!$scope.q.match(signed) || !listing.title[0].match(signed))
+                                    && (!!$scope.q.match(lot) || !listing.title[0].match(lot));
                             });
                         $scope.soldListings = listings.map(function(listing) {
                             return {
@@ -58,6 +64,11 @@
 
             $scope.viewListing = function(listing) {
                 $window.open(listing.url, null, '_blank');
+            };
+
+            $scope.clearSearch = function() {
+                $scope.q = null;
+                $('[ng-model="q"]').focus();
             };
         });
 }());

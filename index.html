@@ -15,17 +15,31 @@
         }
 
         .summary > div {
-            width: 40%;
+            clear: left;
             float: left;
-            margin: 5%;
+            text-align: center;
+        }
+
+        .search-form {
+            position: fixed;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+        }
+
+        .listings {
+            margin-top: 50px;
         }
     </style>
 </head>
 <body>
     <div ng-app="ebay-searcher">
         <div ng-controller="SearchCtrl" class="container-fluid">
-            <form ng-submit="showSoldListings()">
+            <form ng-submit="showSoldListings()" class="search-form">
                 <div class="input-group">
+                    <span class="input-group-btn">
+                        <button class="btn btn-danger" type="button" ng-click="clearSearch()">&times;</button>
+                    </span>
                     <input type="search" class="form-control" ng-model="q" placeholder="Search Keywords">
                     <span class="input-group-btn">
                         <button class="btn btn-info" type="button" ng-click="showSoldListings()">Search</button>
@@ -34,8 +48,9 @@
             </form>
             <div class="listings" ng-if="soldListings.length > 0">
                 <div class="summary">
+                    <div>{{ soldListings.length }} Results</div>
                     <div>Average: {{ averageSalePrice | currency:'$' }}</div>
-                    <div>Common Price: {{ commonSalePrice }}</div>
+                    <div>Most Common: {{ commonSalePrice }}</div>
                 </div>
                 <table class="table">
                     <tr ng-repeat="listing in soldListings">
