@@ -24,6 +24,7 @@
                         "&categoryId=267" +
                         "&keywords=" + encodeURIComponent($scope.q))
                     .then(function(response) {
+                        $window.scrollTo(0,0);
                         var listings = response.data.findCompletedItemsResponse[0].searchResult[0].item
                             .filter(function(listing) {
                                 var signed = /signed|inscribed|autograph/i;
@@ -31,15 +32,19 @@
                                 return (!!$scope.q.match(signed) || !listing.title[0].match(signed))
                                     && (!!$scope.q.match(lot) || !listing.title[0].match(lot));
                             });
-                        $scope.soldListings = listings.map(function(listing) {
-                            return {
-                                price: parseFloat(listing.sellingStatus[0].convertedCurrentPrice[0].__value__),
-                                imageUrl: (listing.galleryURL || [])[0],
-                                name: listing.title[0],
-                                date: moment(listing.listingInfo[0].endTime[0]).fromNow(),
-                                url: listing.viewItemURL[0]
-                            };
-                        });
+                        $scope.soldListings = listings
+                            .map(function(listing) {
+                                return {
+                                    price: parseFloat(listing.sellingStatus[0].convertedCurrentPrice[0].__value__),
+                                    imageUrl: (listing.galleryURL || [])[0],
+                                    name: listing.title[0],
+                                    date: moment(listing.listingInfo[0].endTime[0]).fromNow(),
+                                    url: listing.viewItemURL[0]
+                                };
+                            })
+                            .sort(function(a, b) {
+                                return b.price - a.price;
+                            });
                         $scope.averageSalePrice = $scope.soldListings.reduce(function(sum, listing) {
                             return sum + listing.price;
                         }, 0) / listings.length;
