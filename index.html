@@ -7,17 +7,21 @@
     <meta name="viewport" content="width=device-width,user-scalable=0,maximum-scale=1.0">
     <style>
         .summary {
-            font-weight: bold;
-            font-size: 1.1em;
-            background: mediumseagreen;
+            background: #333;
             color: whitesmoke;
             overflow: auto;
+            padding: 8px;
+            border-radius: 20px;
         }
 
         .summary > div {
-            clear: left;
             float: left;
-            text-align: center;
+            text-align: left;
+        }
+
+        .summary > div:last-child {
+            text-align: right;
+            float: right;
         }
 
         .search-form {
@@ -27,8 +31,28 @@
             right: 5px;
         }
 
-        .listings {
-            margin-top: 50px;
+        body {
+            padding-top: 50px;
+        }
+
+        .search.progress .progress-bar {
+            width: 100%;
+        }
+
+        .results-count {
+            position: absolute;
+            right: 60px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: red;
+            color: white;
+            font-weight: bold;
+            bottom: -9px;
+            z-index: 2;
+            text-align: center;
+            font-size: 8px;
+            padding-top: 4px;
         }
     </style>
 </head>
@@ -38,17 +62,20 @@
             <form ng-submit="showSoldListings()" class="search-form">
                 <div class="input-group">
                     <span class="input-group-btn">
-                        <button class="btn btn-danger" type="button" ng-click="clearSearch()">&times;</button>
+                        <button class="btn btn-danger" type="button" ng-click="clearSearch($event)">&times;</button>
                     </span>
                     <input type="search" class="form-control" ng-model="q" placeholder="Search Keywords">
                     <span class="input-group-btn">
                         <button class="btn btn-info" type="button" ng-click="showSoldListings()">Search</button>
                     </span>
                 </div>
+                <div class="results-count">{{ soldListings.length }}</div>
             </form>
+            <div class="search progress" ng-show="loading">
+                <div class="progress-bar progress-bar-warning progress-bar-striped active"></div>
+            </div>
             <div class="listings" ng-if="soldListings.length > 0">
                 <div class="summary">
-                    <div>{{ soldListings.length }} Results</div>
                     <div>Average: {{ averageSalePrice | currency:'$' }}</div>
                     <div>Most Common: {{ commonSalePrice }}</div>
                 </div>
