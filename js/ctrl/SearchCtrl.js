@@ -17,7 +17,7 @@
              * collection of results to display to user
              * @type {Array}
              */
-            $scope.soldListings = [];
+            $scope.soldListings = null;
             /**
              * sale prices average for listings
              * @type {number}

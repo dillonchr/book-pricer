@@ -69,7 +69,7 @@
                         <button class="btn btn-info" type="button" ng-click="showSoldListings()">Search</button>
                     </span>
                 </div>
-                <div class="results-count">{{ soldListings.length }}</div>
+                <div class="results-count" ng-show="!!soldListings">{{ soldListings.length }}</div>
             </form>
             <div class="search progress" ng-show="loading">
                 <div class="progress-bar progress-bar-warning progress-bar-striped active"></div>
