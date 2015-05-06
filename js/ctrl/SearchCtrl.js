@@ -48,6 +48,11 @@
              * @type {boolean}
              */
             $scope.etsy = false;
+            /**
+             * include results pertaining to leatherbound copies
+             * @type {boolean}
+             */
+            $scope.leather = false;
 
             /**
              * fires off api call and does necessary math for price info

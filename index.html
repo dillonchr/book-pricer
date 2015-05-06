@@ -79,6 +79,7 @@
                                 <li dropdown-checkbox="signed" label="Signed"></li>
                                 <li dropdown-checkbox="lots" label="Lots"></li>
                                 <li dropdown-checkbox="audiobooks" label="Audiobooks"></li>
+                                <li dropdown-checkbox="leather" label="Leatherbound"></li>
                                 <li dropdown-checkbox="etsy" label="Include Etsy"></li>
                             </ul>
                         </div>
@@ -99,7 +100,7 @@
                     <div>Most Common: {{ commonSalePrice }}</div>
                 </div>
                 <table class="table">
-                    <tr ng-repeat="listing in soldListings" ng-class="{etsy: listing.etsy}" ng-hide="(!etsy && listing.etsy) || (!signed && listing.signed) || (!lots && listing.lot) || (!audiobooks && listing.audiobook)">
+                    <tr ng-repeat="listing in soldListings" ng-class="{etsy: listing.etsy}" ng-hide="(!etsy && listing.etsy) || (!signed && listing.signed) || (!lots && listing.lot) || (!audiobooks && listing.audiobook) || (!leather && listing.leather)">
                         <td ng-click="viewListing(listing)"><img class="img-responsive" ng-src="{{ ::listing.imageUrl }}"></td>
                         <td>
                             <p><strong>{{ ::listing.name }}</strong></p>

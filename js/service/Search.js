@@ -5,6 +5,12 @@
         .service('Search', function($http, $q) {
             var EBAY_API_KEY = 'DillonCh-4ce2-442c-b779-8d0905e2d5e4';
             var ETSY_API_KEY = '6bgkt070ccbgvrxn6ze6oj59';
+            var REGEX = {
+                AUDIOBOOK: /audiobook|[^\w]cd[^\w]|cds/i,
+                LEATHER: /[^\w]leather|deluxe/i,
+                LOT: /[^\w]set[^\w]|[^\w]lot[^\w]/i,
+                SIGNED: /signed|inscribed|autograph/i
+            };
 
             function ebaySearch(q) {
                 return $http.jsonp("http://svcs.ebay.com/services/search/FindingService/v1" +
@@ -32,9 +38,10 @@
                                     name: listing.title[0],
                                     date: moment(listing.listingInfo[0].endTime[0]).fromNow(),
                                     url: listing.viewItemURL[0],
-                                    signed: !!listing.title[0].match(/signed|inscribed|autograph/i),
-                                    lot: !!listing.title[0].match(/[^\w]set[^\w]|[^\w]lot[^\w]/i),
-                                    audiobook: !!listing.title[0].match(/audiobook|[^\w]cd[^\w]|cds/i)
+                                    signed: !!listing.title[0].match(REGEX.SIGNED),
+                                    lot: !!listing.title[0].match(REGEX.LOT),
+                                    audiobook: !!listing.title[0].match(REGEX.AUDIOBOOK),
+                                    leather: !!listing.title[0].match(REGEX.LEATHER)
                                 };
                             });
                     });
@@ -56,9 +63,10 @@
                                 name: listing.title,
                                 date: moment.unix(listing.creation_tsz).fromNow(),
                                 url: listing.url,
-                                signed: !!searchableText.match(/signed|inscribed|autograph/i),
-                                lot: !!searchableText.match(/[^\w]set|[^\w]lot/i),
-                                audiobook: !!searchableText.match(/audiobook|[^\w]cd[^\w]|cds/i),
+                                signed: !!searchableText.match(REGEX.SIGNED),
+                                lot: !!searchableText.match(REGEX.LOT),
+                                audiobook: !!searchableText.match(REGEX.AUDIOBOOK),
+                                leather: !!searchableText.match(REGEX.LEATHER),
                                 etsy: true
                             };
                         });
