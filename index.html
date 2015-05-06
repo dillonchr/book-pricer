@@ -58,6 +58,10 @@
         .row.checkboxes > div {
             text-align: center;
         }
+
+        tr.etsy td {
+            background: palegreen;
+        }
     </style>
 </head>
 <body>
@@ -72,9 +76,10 @@
                                 <span class="glyphicon glyphicon-wrench"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a ng-click="signed = !signed; $event.stopPropagation();"><span class="glyphicon" ng-class="{'glyphicon-ok': signed, 'glyphicon-remove': !signed}"></span> Signed</a></li>
-                                <li><a ng-click="lots = !lots; $event.stopPropagation();"><span class="glyphicon" ng-class="{'glyphicon-ok': lots, 'glyphicon-remove': !lots}"></span> Lots</a></li>
-                                <li><a ng-click="audiobooks = !audiobooks; $event.stopPropagation();"><span class="glyphicon" ng-class="{'glyphicon-ok': audiobooks, 'glyphicon-remove': !audiobooks}"></span> Audiobooks</a></li>
+                                <li dropdown-checkbox="signed" label="Signed"></li>
+                                <li dropdown-checkbox="lots" label="Lots"></li>
+                                <li dropdown-checkbox="audiobooks" label="Audiobooks"></li>
+                                <li dropdown-checkbox="etsy" label="Include Etsy"></li>
                             </ul>
                         </div>
                     </span>
@@ -94,7 +99,7 @@
                     <div>Most Common: {{ commonSalePrice }}</div>
                 </div>
                 <table class="table">
-                    <tr ng-repeat="listing in soldListings">
+                    <tr ng-repeat="listing in soldListings" ng-class="{etsy: listing.etsy}" ng-hide="(!etsy && listing.etsy) || (!signed && listing.signed) || (!lots && listing.lot) || (!audiobooks && listing.audiobook)">
                         <td ng-click="viewListing(listing)"><img class="img-responsive" ng-src="{{ ::listing.imageUrl }}"></td>
                         <td>
                             <p><strong>{{ ::listing.name }}</strong></p>
@@ -112,5 +117,7 @@
     <script src="js/libs/moment/moment.js"></script>
     <script src="js/ebay-searcher.js"></script>
     <script src="js/ctrl/SearchCtrl.js"></script>
+    <script src="js/service/Search.js"></script>
+    <script src="js/directive/DropdownCheckbox.js"></script>
 </body>
 </html>

@@ -2,7 +2,7 @@
     'use strict';
 
     angular.module('ebay-searcher')
-        .controller('SearchCtrl', function($scope, $http, $window) {
+        .controller('SearchCtrl', function($scope, Search, $window) {
             /**
              * query holder
              * @type {string}
@@ -43,6 +43,11 @@
              * @type {boolean}
              */
             $scope.audiobooks = false;
+            /**
+             * include results from active etsy listings
+             * @type {boolean}
+             */
+            $scope.etsy = false;
 
             /**
              * fires off api call and does necessary math for price info
@@ -50,48 +55,25 @@
              * @returns {*}
              */
             function loadSoldListings(q) {
-                return $http.jsonp("http://svcs.ebay.com/services/search/FindingService/v1" +
-                    "?OPERATION-NAME=findCompletedItems" +
-                    "&SERVICE-VERSION=1.0.0" +
-                    "&SECURITY-APPNAME=DillonCh-4ce2-442c-b779-8d0905e2d5e4" +
-                    "&GLOBAL-ID=EBAY-US" +
-                    "&RESPONSE-DATA-FORMAT=JSON" +
-                    "&callback=JSON_CALLBACK" +
-                    "&REST-PAYLOAD" +
-                    "&itemFilter(0).name=SoldItemsOnly" +
-                    "&itemFilter(0).value=true" +
-                    "&itemFilter(1).name=HideDuplicateItems" +
-                    "&itemFilter(1).value=true" +
-                    "&paginationInput.entriesPerPage=100" +
-                    "&sortOrder=PricePlusShippingHighest" +
-                    "&categoryId=267" +
-                    "&keywords=" + encodeURIComponent(q))
-                    .then(function(response) {
+                return Search.search(q, $scope.etsy)
+                    .then(function(listings) {
                         /**
                          * go to top of page to view all results
                          */
                         $window.scrollTo(0,0);
-                        $scope.soldListings = response.data.findCompletedItemsResponse[0].searchResult[0].item
-                            .filter(function(listing) {
-                                return ($scope.signed || !listing.title[0].match(/signed|inscribed|autograph/i)) &&
-                                    ($scope.lots || !listing.title[0].match(/set|lot/i)) &&
-                                    ($scope.audiobooks || !listing.title[0].match(/audiobook|[^\w]cd[^\w]|cds/i));
-                            })
-                            .map(function(listing) {
-                                return {
-                                    price: parseFloat(listing.sellingStatus[0].convertedCurrentPrice[0].__value__),
-                                    imageUrl: (listing.galleryURL || [])[0],
-                                    name: listing.title[0],
-                                    date: moment(listing.listingInfo[0].endTime[0]).fromNow(),
-                                    url: listing.viewItemURL[0]
-                                };
-                            })
-                            .sort(function(a, b) {
-                                return b.price - a.price;
-                            });
-                        $scope.averageSalePrice = $scope.soldListings.reduce(function(sum, listing) {
-                                return sum + listing.price;
-                            }, 0) / $scope.soldListings.length;
+                        /**
+                         * apply search filters to results
+                         * @type {Array.<T>|*}
+                         */
+                        $scope.soldListings = listings;
+                        /**
+                         * get average price from filtered results
+                         * @type {number}
+                         */
+                        $scope.averageSalePrice = $scope.soldListings
+                                .reduce(function(sum, listing) {
+                                    return sum + listing.price;
+                                }, 0) / $scope.soldListings.length;
                         /**
                          * quick and dirty way of finding the lowest common price in increments of 10
                          * @type {{}}
@@ -111,7 +93,7 @@
                                 mostCommonPrice = price;
                             }
                         });
-                        $scope.commonSalePrice = mostCommonPrice || '--';
+                        $scope.commonSalePrice = mostCommonPrice;
                     });
             }
 
@@ -161,7 +143,7 @@
              * @param e
              */
             $scope.clearSearch = function(e) {
-                $scope.q = null;
+                $scope.q = $scope.soldListings = null;
                 $('[ng-model="q"]').focus();
                 e.stopPropagation();
                 e.stopImmediatePropagation();
