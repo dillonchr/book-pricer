@@ -28,6 +28,16 @@
              * @type {string}
              */
             $scope.commonSalePrice = null;
+            /**
+             * allowed signed/autographed/inscribed results
+             * @type {boolean}
+             */
+            $scope.signed = false;
+            /**
+             * allow lot/set results
+             * @type {boolean}
+             */
+            $scope.lots = false;
 
             /**
              * fires off api call and does necessary math for price info
@@ -60,8 +70,8 @@
                             .filter(function(listing) {
                                 var signed = /signed|inscribed|autograph/i;
                                 var lot = /set|lot/i;
-                                return (!!q.match(signed) || !listing.title[0].match(signed))
-                                    && (!!q.match(lot) || !listing.title[0].match(lot));
+                                return ($scope.signed || !listing.title[0].match(signed))
+                                    && ($scope.lots || !listing.title[0].match(lot));
                             })
                             .map(function(listing) {
                                 return {

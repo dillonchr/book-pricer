@@ -54,6 +54,10 @@
             font-size: 8px;
             padding-top: 4px;
         }
+
+        .row.checkboxes > div {
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -63,10 +67,19 @@
                 <div class="input-group">
                     <span class="input-group-btn">
                         <button class="btn btn-danger" type="button" ng-click="clearSearch($event)">&times;</button>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                <span class="glyphicon glyphicon-wrench"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a ng-click="signed = !signed; $event.stopPropagation();"><span class="glyphicon" ng-class="{'glyphicon-ok': signed, 'glyphicon-remove': !signed}"></span> Signed</a></li>
+                                <li><a ng-click="lots = !lots; $event.stopPropagation();"><span class="glyphicon" ng-class="{'glyphicon-ok': lots, 'glyphicon-remove': !lots}"></span> Lots</a></li>
+                            </ul>
+                        </div>
                     </span>
                     <input type="search" class="form-control" ng-model="q" placeholder="Search Keywords">
                     <span class="input-group-btn">
-                        <button class="btn btn-info" type="button" ng-click="showSoldListings()">Search</button>
+                        <button class="btn btn-info" type="button" ng-click="showSoldListings()"><span class="glyphicon glyphicon-search"></span></button>
                     </span>
                 </div>
                 <div class="results-count" ng-show="!!soldListings">{{ soldListings.length }}</div>
@@ -93,6 +106,7 @@
         </div>
     </div>
     <script src="js/libs/jquery/dist/jquery.min.js"></script>
+    <script src="js/libs/bootstrap/dist/js/bootstrap.js"></script>
     <script src="js/libs/angular/angular.min.js"></script>
     <script src="js/libs/moment/moment.js"></script>
     <script src="js/ebay-searcher.js"></script>
