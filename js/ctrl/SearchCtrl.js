@@ -38,6 +38,11 @@
              * @type {boolean}
              */
             $scope.lots = false;
+            /**
+             * allow audiobooks/cd results
+             * @type {boolean}
+             */
+            $scope.audiobooks = false;
 
             /**
              * fires off api call and does necessary math for price info
@@ -68,10 +73,9 @@
                         $window.scrollTo(0,0);
                         $scope.soldListings = response.data.findCompletedItemsResponse[0].searchResult[0].item
                             .filter(function(listing) {
-                                var signed = /signed|inscribed|autograph/i;
-                                var lot = /set|lot/i;
-                                return ($scope.signed || !listing.title[0].match(signed))
-                                    && ($scope.lots || !listing.title[0].match(lot));
+                                return ($scope.signed || !listing.title[0].match(/signed|inscribed|autograph/i)) &&
+                                    ($scope.lots || !listing.title[0].match(/set|lot/i)) &&
+                                    ($scope.audiobooks || !listing.title[0].match(/audiobook|[^\w]cd[^\w]|cds/i));
                             })
                             .map(function(listing) {
                                 return {
