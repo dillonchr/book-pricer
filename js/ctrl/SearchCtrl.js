@@ -140,7 +140,7 @@
              * @param listing
              */
             $scope.viewListing = function(listing) {
-                $window.open(listing.url, null, '_blank');
+                $window.open(listing.url, '_blank');
             };
 
             /**

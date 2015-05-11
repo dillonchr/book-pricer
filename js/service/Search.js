@@ -103,13 +103,16 @@
             }
 
             this.search = function(q, includeEtsy) {
-                if(!isNaN(q)) {
+                if(angular.isNumber(q)) {
                     return isbnSearch(q)
                         .then(function(query) {
                             return searchForListings(query, includeEtsy);
                         });
                 }
-                return searchForListings(q, includeEtsy);
+                if(!!q) {
+                    return searchForListings(q, includeEtsy);
+                }
+                return $q.reject();
             };
         });
 }());

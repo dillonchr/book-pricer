@@ -44,9 +44,9 @@
                 </div>
                 <table class="table">
                     <tr ng-repeat="listing in soldListings" ng-class="{etsy: listing.etsy}" ng-hide="(!etsy && listing.etsy) || (!signed && listing.signed) || (!lots && listing.lot) || (!audiobooks && listing.audiobook) || (!leather && listing.leather)">
-                        <td ng-click="viewListing(listing)"><img class="img-responsive" ng-src="{{ ::listing.imageUrl }}"></td>
+                        <td><img class="img-responsive" ng-src="{{ ::listing.imageUrl }}"></td>
                         <td>
-                            <p><strong>{{ ::listing.name }}</strong></p>
+                            <p ng-click="viewListing(listing)"><strong>{{ ::listing.name }}</strong></p>
                             <p>{{ ::listing.date }}</p>
                         </td>
                         <td>{{ ::listing.price | currency:'$' }}</p></td>
