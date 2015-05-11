@@ -1,0 +1,69 @@
+.summary {
+    background: #333;
+    color: whitesmoke;
+    overflow: auto;
+    padding: 8px;
+    border-radius: 20px;
+}
+
+.summary > div {
+    float: left;
+    text-align: left;
+}
+
+.summary > div:last-child {
+    text-align: right;
+    float: right;
+}
+
+.search-form {
+    position: fixed;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+}
+
+body {
+    padding-top: 50px;
+}
+
+.search.progress .progress-bar {
+    width: 100%;
+}
+
+.results-count {
+    position: absolute;
+    right: 60px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: red;
+    color: white;
+    font-weight: bold;
+    bottom: -9px;
+    z-index: 2;
+    text-align: center;
+    font-size: 8px;
+    padding-top: 4px;
+}
+
+.row.checkboxes > div {
+    text-align: center;
+}
+
+.listing {
+    width: 25%;
+    float: left;
+}
+
+.listing .thumb {
+    float: left;
+}
+
+.listing .heading {
+    float: right;
+}
+
+.listing.etsy {
+    background: palegreen;
+}

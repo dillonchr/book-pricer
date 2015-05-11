@@ -8,7 +8,7 @@
             var REGEX = {
                 AUDIOBOOK: /audiobook|[^\w]cd[^\w]|cds/i,
                 LEATHER: /[^\w]leather|deluxe/i,
-                LOT: /[^\w]set[^\w]|[^\w]lot[^\w]/i,
+                LOT: /[^\w]set[^\w]|lot of/i,
                 SIGNED: /signed|inscribed|autograph/i
             };
 
@@ -73,7 +73,19 @@
                     });
             }
 
-            this.search = function(q, includeEtsy) {
+            function isbnSearch(isbn) {
+                return $http.jsonp('https://openlibrary.org/api/books?jscmd=data&callback=JSON_CALLBACK&bibkeys=ISBN:' + isbn)
+                    .then(function(response) {
+                        for(var key in response.data) {
+                            var data = response.data[key];
+                            if(data.hasOwnProperty('title')) {
+                                return data.title + ' ' + data.authors[0].name;
+                            }
+                        }
+                    });
+            }
+
+            function searchForListings(q, includeEtsy) {
                 var query = encodeURIComponent(q);
                 var requests = [ebaySearch(query)];
                 if(includeEtsy) {
@@ -88,6 +100,16 @@
                                 return b.price - a.price;
                             });
                     });
+            }
+
+            this.search = function(q, includeEtsy) {
+                if(!isNaN(q)) {
+                    return isbnSearch(q)
+                        .then(function(query) {
+                            return searchForListings(query, includeEtsy);
+                        });
+                }
+                return searchForListings(q, includeEtsy);
             };
         });
 }());
