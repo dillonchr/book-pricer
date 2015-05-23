@@ -54,6 +54,51 @@
              */
             $scope.leather = false;
 
+            var soldListings = null;
+
+            function updateSoldListings() {
+                /**
+                 * apply search filters to results
+                 * @type {Array.<T>|*}
+                 */
+                $scope.soldListings = soldListings
+                    .filter(function(listing) {
+                        return (!listing.etsy || etsy) &&
+                            (signed || !listing.signed) &&
+                            (lots || !listing.lot) &&
+                            (audiobooks || !listing.audiobook) &&
+                            (leather || !listing.leather);
+                    });
+                /**
+                 * get average price from filtered results
+                 * @type {number}
+                 */
+                $scope.averageSalePrice = $scope.soldListings
+                        .reduce(function(sum, listing) {
+                            return sum + listing.price;
+                        }, 0) / $scope.soldListings.length;
+                /**
+                 * quick and dirty way of finding the lowest common price in increments of 10
+                 * @type {{}}
+                 */
+                var priceCollection = {};
+                var mostCommonCount = 0;
+                var mostCommonPrice = '';
+                $scope.soldListings.forEach(function(listing) {
+                    var price = '$' + (Math.round(listing.price / 10) * 10).toString();
+                    if(!priceCollection[price]) {
+                        priceCollection[price] = 1;
+                    } else {
+                        priceCollection[price]++;
+                    }
+                    if(mostCommonCount < priceCollection[price]) {
+                        mostCommonCount = priceCollection[price];
+                        mostCommonPrice = price;
+                    }
+                });
+                $scope.commonSalePrice = mostCommonPrice;
+            }
+
             /**
              * fires off api call and does necessary math for price info
              * @param q
@@ -66,39 +111,8 @@
                          * go to top of page to view all results
                          */
                         $window.scrollTo(0,0);
-                        /**
-                         * apply search filters to results
-                         * @type {Array.<T>|*}
-                         */
-                        $scope.soldListings = listings;
-                        /**
-                         * get average price from filtered results
-                         * @type {number}
-                         */
-                        $scope.averageSalePrice = $scope.soldListings
-                                .reduce(function(sum, listing) {
-                                    return sum + listing.price;
-                                }, 0) / $scope.soldListings.length;
-                        /**
-                         * quick and dirty way of finding the lowest common price in increments of 10
-                         * @type {{}}
-                         */
-                        var priceCollection = {};
-                        var mostCommonCount = 0;
-                        var mostCommonPrice = '';
-                        $scope.soldListings.forEach(function(listing) {
-                            var price = '$' + (Math.round(listing.price / 10) * 10).toString();
-                            if(!priceCollection[price]) {
-                                priceCollection[price] = 1;
-                            } else {
-                                priceCollection[price]++;
-                            }
-                            if(mostCommonCount < priceCollection[price]) {
-                                mostCommonCount = priceCollection[price];
-                                mostCommonPrice = price;
-                            }
-                        });
-                        $scope.commonSalePrice = mostCommonPrice;
+                        soldListings = listings;
+                        updateSoldListings();
                     });
             }
 
