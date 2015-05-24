@@ -15,6 +15,10 @@
             function transformEbayResponse(response) {
                 var forSale = !!response.config.url.match(/findItemsAdvanced/);
                 return response.data[Object.keys(response.data)[0]][0].searchResult[0].item
+                    .filter(function(listing) {
+                        return !!listing.galleryURL &&
+                            listing.galleryURL.length > 0;
+                    })
                     .map(function(listing) {
                         return {
                             price: parseFloat(listing.sellingStatus[0].convertedCurrentPrice[0].__value__),
