@@ -19,11 +19,11 @@
                                 <span class="glyphicon glyphicon-wrench"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu">
+                                <li dropdown-checkbox="forSale" label="Include Live Listings"></li>
                                 <li dropdown-checkbox="signed" label="Signed"></li>
                                 <li dropdown-checkbox="lots" label="Lots"></li>
                                 <li dropdown-checkbox="audiobooks" label="Audiobooks"></li>
                                 <li dropdown-checkbox="leather" label="Leatherbound"></li>
-                                <li dropdown-checkbox="etsy" label="Include Etsy"></li>
                             </ul>
                         </div>
                     </span>
@@ -41,7 +41,7 @@
                     <div>Average: {{ averageSalePrice | currency:'$' }}</div>
                     <div>Most Common: {{ commonSalePrice }}</div>
                 </div>
-                <div class="listing" ng-click="viewListing(listing)" ng-repeat="listing in soldListings" ng-class="{etsy: listing.etsy}" ng-hide="(!etsy && listing.etsy) || (!signed && listing.signed) || (!lots && listing.lot) || (!audiobooks && listing.audiobook) || (!leather && listing.leather)">
+                <div class="listing" ng-click="viewListing(listing)" ng-repeat="listing in soldListings" ng-class="{forSale: listing.forSale}" ng-hide="(!forSale && listing.forSale) || (!signed && listing.signed) || (!lots && listing.lot) || (!audiobooks && listing.audiobook) || (!leather && listing.leather)">
                     <img class="img-responsive" ng-src="{{ ::listing.imageUrl }}">
                     <span class="price">{{ ::listing.price | currency:'$' }}</span>
                 </div>

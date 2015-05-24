@@ -12,7 +12,27 @@
                 SIGNED: /signed|inscribed|autograph/i
             };
 
-            function ebaySearch(q) {
+            function transformEbayResponse(response) {
+                var forSale = !!response.config.url.match(/findItemsAdvanced/);
+                return response.data[Object.keys(response.data)[0]][0].searchResult[0].item
+                    .map(function(listing) {
+                        return {
+                            price: parseFloat(listing.sellingStatus[0].convertedCurrentPrice[0].__value__),
+                            imageUrl: (listing.galleryURL || [])[0],
+                            name: listing.title[0],
+                            sortDate: new Date(listing.listingInfo[0].endTime[0]).getTime(),
+                            date: moment(listing.listingInfo[0].endTime[0]).fromNow(),
+                            url: listing.viewItemURL[0],
+                            signed: !!listing.title[0].match(REGEX.SIGNED),
+                            lot: !!listing.title[0].match(REGEX.LOT),
+                            audiobook: !!listing.title[0].match(REGEX.AUDIOBOOK),
+                            leather: !!listing.title[0].match(REGEX.LEATHER),
+                            forSale: forSale
+                        };
+                    });
+            }
+
+            function soldEbaySearch(q) {
                 return $http.jsonp("http://svcs.ebay.com/services/search/FindingService/v1" +
                     "?OPERATION-NAME=findCompletedItems" +
                     "&SERVICE-VERSION=1.0.0" +
@@ -29,23 +49,24 @@
                     "&sortOrder=PricePlusShippingHighest" +
                     "&categoryId=267" +
                     "&keywords=" + q)
-                    .then(function(response) {
-                        return response.data.findCompletedItemsResponse[0].searchResult[0].item
-                            .map(function(listing) {
-                                return {
-                                    price: parseFloat(listing.sellingStatus[0].convertedCurrentPrice[0].__value__),
-                                    imageUrl: (listing.galleryURL || [])[0],
-                                    name: listing.title[0],
-                                    sortDate: new Date(listing.listingInfo[0].endTime[0]).getTime(),
-                                    date: moment(listing.listingInfo[0].endTime[0]).fromNow(),
-                                    url: listing.viewItemURL[0],
-                                    signed: !!listing.title[0].match(REGEX.SIGNED),
-                                    lot: !!listing.title[0].match(REGEX.LOT),
-                                    audiobook: !!listing.title[0].match(REGEX.AUDIOBOOK),
-                                    leather: !!listing.title[0].match(REGEX.LEATHER)
-                                };
-                            });
-                    });
+                    .then(transformEbayResponse);
+            }
+
+            function liveEbaySearch(q) {
+                return $http.jsonp("http://svcs.ebay.com/services/search/FindingService/v1" +
+                    "?OPERATION-NAME=findItemsAdvanced" +
+                    "&SERVICE-VERSION=1.0.0" +
+                    "&SECURITY-APPNAME=" + EBAY_API_KEY +
+                    "&GLOBAL-ID=EBAY-US" +
+                    "&RESPONSE-DATA-FORMAT=JSON" +
+                    "&callback=JSON_CALLBACK" +
+                    "&REST-PAYLOAD" +
+                    "&itemFilter(0).name=HideDuplicateItems" +
+                    "&itemFilter(0).value=true" +
+                    "&paginationInput.entriesPerPage=100" +
+                    "&categoryId=267" +
+                    "&keywords=" + q)
+                    .then(transformEbayResponse);
             }
 
             function etsySearch(q) {
@@ -69,7 +90,7 @@
                                 lot: !!searchableText.match(REGEX.LOT),
                                 audiobook: !!searchableText.match(REGEX.AUDIOBOOK),
                                 leather: !!searchableText.match(REGEX.LEATHER),
-                                etsy: true
+                                forSale: true
                             };
                         });
                     });
@@ -89,7 +110,10 @@
 
             function searchForListings(q, includeEtsy) {
                 var query = encodeURIComponent(q);
-                var requests = [ebaySearch(query)];
+                var requests = [
+                  soldEbaySearch(query),
+                  liveEbaySearch(query)
+                ];
                 if(includeEtsy) {
                     requests.push(etsySearch(query));
                 }

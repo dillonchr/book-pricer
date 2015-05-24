@@ -47,7 +47,7 @@
              * include results from active etsy listings
              * @type {boolean}
              */
-            $scope.etsy = false;
+            $scope.forSale = false;
             /**
              * include results pertaining to leatherbound copies
              * @type {boolean}
@@ -60,7 +60,7 @@
              * @returns {*}
              */
             function loadSoldListings(q) {
-                return Search.search(q, $scope.etsy)
+                return Search.search(q, $scope.forSale)
                     .then(function(listings) {
                         /**
                          * go to top of page to view all results
