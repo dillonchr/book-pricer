@@ -32,7 +32,6 @@
                         <button class="btn btn-info" type="button" ng-click="showSoldListings()"><span class="glyphicon glyphicon-search"></span></button>
                     </span>
                 </div>
-                <div class="results-count" ng-show="!!soldListings">{{ soldListings.length }}</div>
             </form>
             <div class="search progress" ng-show="loading">
                 <div class="progress-bar progress-bar-warning progress-bar-striped active"></div>
@@ -42,16 +41,10 @@
                     <div>Average: {{ averageSalePrice | currency:'$' }}</div>
                     <div>Most Common: {{ commonSalePrice }}</div>
                 </div>
-                <table class="table">
-                    <tr ng-repeat="listing in soldListings" ng-class="{etsy: listing.etsy}" ng-hide="(!etsy && listing.etsy) || (!signed && listing.signed) || (!lots && listing.lot) || (!audiobooks && listing.audiobook) || (!leather && listing.leather)">
-                        <td><img class="img-responsive" ng-src="{{ ::listing.imageUrl }}"></td>
-                        <td>
-                            <p ng-click="viewListing(listing)"><strong>{{ ::listing.name }}</strong></p>
-                            <p>{{ ::listing.date }}</p>
-                        </td>
-                        <td>{{ ::listing.price | currency:'$' }}</p></td>
-                    </tr>
-                </table>
+                <div class="listing" ng-click="viewListing(listing)" ng-repeat="listing in soldListings" ng-class="{etsy: listing.etsy}" ng-hide="(!etsy && listing.etsy) || (!signed && listing.signed) || (!lots && listing.lot) || (!audiobooks && listing.audiobook) || (!leather && listing.leather)">
+                    <img class="img-responsive" ng-src="{{ ::listing.imageUrl }}">
+                    <span class="price">{{ ::listing.price | currency:'$' }}</span>
+                </div>
             </div>
         </div>
     </div>

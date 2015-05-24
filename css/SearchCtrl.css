@@ -17,34 +17,11 @@
 }
 
 .search-form {
-    position: fixed;
-    top: 5px;
-    left: 5px;
-    right: 5px;
-}
-
-body {
-    padding-top: 50px;
+    margin: 20px 0;
 }
 
 .search.progress .progress-bar {
     width: 100%;
-}
-
-.results-count {
-    position: absolute;
-    right: 60px;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: red;
-    color: white;
-    font-weight: bold;
-    bottom: -9px;
-    z-index: 2;
-    text-align: center;
-    font-size: 8px;
-    padding-top: 4px;
 }
 
 .row.checkboxes > div {
@@ -52,18 +29,16 @@ body {
 }
 
 .listing {
-    width: 25%;
     float: left;
+    margin: 10px;
+    position: relative;
 }
 
-.listing .thumb {
-    float: left;
-}
-
-.listing .heading {
-    float: right;
-}
-
-.listing.etsy {
-    background: palegreen;
+.listing .price {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 1px;
+    color: white;
 }
