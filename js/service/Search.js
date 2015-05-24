@@ -4,7 +4,6 @@
     angular.module('ebay-searcher')
         .service('Search', function($http, $q) {
             var EBAY_API_KEY = 'DillonCh-4ce2-442c-b779-8d0905e2d5e4';
-            var ETSY_API_KEY = '6bgkt070ccbgvrxn6ze6oj59';
             var REGEX = {
                 AUDIOBOOK: /audiobook|[^\w]cd[^\w]|cds/i,
                 LEATHER: /[^\w]leather|deluxe/i,
@@ -73,33 +72,6 @@
                     .then(transformEbayResponse);
             }
 
-            function etsySearch(q) {
-                return $http.jsonp('https://openapi.etsy.com/v2/listings/active.js' +
-                    '?callback=JSON_CALLBACK' +
-                    '&limit=100' +
-                    '&includes=Images:1' +
-                    '&api_key=' + ETSY_API_KEY +
-                    '&keywords=' + q)
-                    .then(function(response) {
-                        return response.data.results.map(function(listing) {
-                            var searchableText = listing.title + ' ' + listing.description;
-                            return {
-                                price: parseFloat(listing.price),
-                                imageUrl: (listing.Images || [{url_170x135: null}])[0].url_170x135,
-                                name: listing.title,
-                                sortDate: new Date(listing.creation_tsz).getTime(),
-                                date: moment.unix(listing.creation_tsz).fromNow(),
-                                url: listing.url,
-                                signed: !!searchableText.match(REGEX.SIGNED),
-                                lot: !!searchableText.match(REGEX.LOT),
-                                audiobook: !!searchableText.match(REGEX.AUDIOBOOK),
-                                leather: !!searchableText.match(REGEX.LEATHER),
-                                forSale: true
-                            };
-                        });
-                    });
-            }
-
             function isbnSearch(isbn) {
                 return $http.jsonp('https://openlibrary.org/api/books?jscmd=data&callback=JSON_CALLBACK&bibkeys=ISBN:' + isbn)
                     .then(function(response) {
@@ -112,16 +84,12 @@
                     });
             }
 
-            function searchForListings(q, includeEtsy) {
+            function searchForListings(q) {
                 var query = encodeURIComponent(q);
-                var requests = [
-                  soldEbaySearch(query),
-                  liveEbaySearch(query)
-                ];
-                if(includeEtsy) {
-                    requests.push(etsySearch(query));
-                }
-                return $q.all(requests)
+                return $q.all([
+                    soldEbaySearch(query),
+                    liveEbaySearch(query)
+                ])
                     .then(function(results) {
                         return results.reduce(function(coll, arr) {
                             return coll.concat(arr);

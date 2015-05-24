@@ -60,7 +60,7 @@
              * @returns {*}
              */
             function loadSoldListings(q) {
-                return Search.search(q, $scope.forSale)
+                return Search.search(q)
                     .then(function(listings) {
                         /**
                          * go to top of page to view all results
