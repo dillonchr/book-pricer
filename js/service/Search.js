@@ -36,6 +36,7 @@
                                     price: parseFloat(listing.sellingStatus[0].convertedCurrentPrice[0].__value__),
                                     imageUrl: (listing.galleryURL || [])[0],
                                     name: listing.title[0],
+                                    sortDate: new Date(listing.listingInfo[0].endTime[0]).getTime(),
                                     date: moment(listing.listingInfo[0].endTime[0]).fromNow(),
                                     url: listing.viewItemURL[0],
                                     signed: !!listing.title[0].match(REGEX.SIGNED),
@@ -61,6 +62,7 @@
                                 price: parseFloat(listing.price),
                                 imageUrl: (listing.Images || [{url_170x135: null}])[0].url_170x135,
                                 name: listing.title,
+                                sortDate: new Date(listing.creation_tsz).getTime(),
                                 date: moment.unix(listing.creation_tsz).fromNow(),
                                 url: listing.url,
                                 signed: !!searchableText.match(REGEX.SIGNED),
@@ -97,7 +99,7 @@
                             return coll.concat(arr);
                         }, [])
                             .sort(function(a, b) {
-                                return b.price - a.price;
+                                return b.sortDate - a.sortDate;
                             });
                     });
             }
