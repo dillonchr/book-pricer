@@ -54,7 +54,7 @@
     overflow-x: auto;
     position: relative;
     height: 125px;
-    margin: 10px 20px;
+    margin: 10px 0;
     background: rgba(0, 0, 0, 0.7);
     padding: 10px;
 }
