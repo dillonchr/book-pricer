@@ -1,5 +1,5 @@
 (function() {
     'use strict';
 
-    angular.module('ebay-searcher', []);
+    angular.module('ebay-searcher', ['ngTouch']);
 }());

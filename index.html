@@ -37,13 +37,9 @@
                 <div class="progress-bar progress-bar-warning progress-bar-striped active"></div>
             </div>
             <div class="listings" ng-if="soldListings.length > 0">
-                <div class="summary">
-                    <div>Average: {{ averageSalePrice | currency:'$' }}</div>
-                    <div>Most Common: {{ commonSalePrice }}</div>
-                </div>
-                <div class="listing" ng-click="viewListing(listing)" ng-repeat="listing in soldListings" ng-class="{forSale: listing.forSale}" ng-hide="(!forSale && listing.forSale) || (!signed && listing.signed) || (!lots && listing.lot) || (!audiobooks && listing.audiobook) || (!leather && listing.leather)">
-                    <img class="img-responsive" ng-src="{{ ::listing.imageUrl }}">
-                    <span class="price">{{ ::listing.price | currency:'$' }}</span>
+                <div class="price-group" ng-repeat="priceGroup in soldListings">
+                    <img class="img-responsive" ng-src="{{ ::listing.imageUrl }}" ng-repeat="listing in priceGroup[1]" ng-click="viewListing(listing)">
+                    <div class="price">{{ ::priceGroup[0] }} &times; {{ ::priceGroup[1].length }}</div>
                 </div>
             </div>
         </div>
@@ -51,6 +47,7 @@
     <script src="js/libs/jquery/dist/jquery.min.js"></script>
     <script src="js/libs/bootstrap/dist/js/bootstrap.js"></script>
     <script src="js/libs/angular/angular.min.js"></script>
+    <script src="js/libs/angular-touch/angular-touch.min.js"></script>
     <script src="js/libs/moment/moment.js"></script>
     <script src="js/ebay-searcher.js"></script>
     <script src="js/ctrl/SearchCtrl.js"></script>

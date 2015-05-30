@@ -84,31 +84,51 @@
                     });
             }
 
-            function searchForListings(q) {
+            function searchForListings(q, liveListings) {
                 var query = encodeURIComponent(q);
-                return $q.all([
-                    soldEbaySearch(query),
-                    liveEbaySearch(query)
-                ])
+                var requests = [
+                    soldEbaySearch(query)
+                ];
+                if(liveListings) {
+                    requests.push(liveEbaySearch(query));
+                }
+                return $q.all(requests)
                     .then(function(results) {
-                        return results.reduce(function(coll, arr) {
-                            return coll.concat(arr);
-                        }, [])
-                            .sort(function(a, b) {
-                                return b.sortDate - a.sortDate;
-                            });
+                        var groupedListings = results
+                            .reduce(function(coll, arr) {
+                                return coll.concat(arr);
+                            }, [])
+                            .reduce(function(prices, listing) {
+                                var price = Math.round(listing.price / 10) * 10 || 1;
+                                var key = '$' + price;
+                                if(!prices.hasOwnProperty(key)) {
+                                    prices[key] = [];
+                                }
+                                prices[key].push(listing);
+                                return prices;
+                            }, {});
+                        return Object.keys(groupedListings)
+                                .map(function(key) {
+                                    return [key, groupedListings[key]];
+                                })
+                                .sort(function(a, b) {
+                                    if(a[1].length === b[1].length) {
+                                        return b[0].substr(1) - a[0].substr(1);
+                                    }
+                                    return b[1].length - a[1].length;
+                                });
                     });
             }
 
-            this.search = function(q, includeEtsy) {
+            this.search = function(q, includeLiveListings) {
                 if(angular.isNumber(q)) {
                     return isbnSearch(q)
                         .then(function(query) {
-                            return searchForListings(query, includeEtsy);
+                            return searchForListings(query, includeLiveListings);
                         });
                 }
                 if(!!q) {
-                    return searchForListings(q, includeEtsy);
+                    return searchForListings(q, includeLiveListings);
                 }
                 return $q.reject();
             };
