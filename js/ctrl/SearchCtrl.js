@@ -145,13 +145,9 @@
 
             /**
              * clears search and prepares for new one
-             * @param e
              */
-            $scope.clearSearch = function(e) {
+            $scope.clearSearch = function() {
                 $scope.q = $scope.soldListings = null;
-                $('[ng-model="q"]').focus();
-                e.stopPropagation();
-                e.stopImmediatePropagation();
             };
         });
 }());
