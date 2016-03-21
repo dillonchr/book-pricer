@@ -5,43 +5,81 @@
     <title>eBay Searcher</title>
     <link rel="stylesheet" href="js/libs/bootstrap/dist/css/bootstrap.min.css">
     <meta name="viewport" content="width=device-width,user-scalable=0,maximum-scale=1.0">
-    <link rel="stylesheet" href="css/SearchCtrl.css">
+    <link rel="stylesheet" href="app/css/app.css">
 </head>
 <body>
     <div ng-app="ebay-searcher">
-        <div ng-controller="SearchCtrl" class="container-fluid">
-            <form ng-submit="showSoldListings()" class="search-form">
+        <header ng-controller="SearchCtrl" class="container-fluid">
+            <form ng-submit="search()" class="search-form">
                 <div class="input-group">
                     <span class="input-group-btn">
                         <button class="btn btn-danger" type="button" ng-click="clearSearch()">&times;</button>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                <span class="glyphicon glyphicon-wrench"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu">
-                                <li dropdown-checkbox="forSale" label="Include Live Listings"></li>
-                                <li dropdown-checkbox="signed" label="Signed"></li>
-                                <li dropdown-checkbox="lots" label="Lots"></li>
-                                <li dropdown-checkbox="audiobooks" label="Audiobooks"></li>
-                                <li dropdown-checkbox="leather" label="Leatherbound"></li>
-                            </ul>
-                        </div>
+                        <!--<div class="btn-group">-->
+                            <!--<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">-->
+                                <!--<span class="glyphicon glyphicon-wrench"></span>-->
+                            <!--</button>-->
+                            <!--<ul class="dropdown-menu" role="menu">-->
+                                <!--<li dropdown-checkbox="forSale" label="Include Live Listings"></li>-->
+                                <!--<li dropdown-checkbox="signed" label="Signed"></li>-->
+                                <!--<li dropdown-checkbox="lots" label="Lots"></li>-->
+                                <!--<li dropdown-checkbox="audiobooks" label="Audiobooks"></li>-->
+                                <!--<li dropdown-checkbox="leather" label="Leatherbound"></li>-->
+                            <!--</ul>-->
+                        <!--</div>-->
                     </span>
                     <input type="search" class="form-control" ng-model="q" placeholder="Search Keywords">
                     <span class="input-group-btn">
-                        <button class="btn btn-info" type="button" ng-click="showSoldListings()"><span class="glyphicon glyphicon-search"></span></button>
+                        <button class="btn btn-info" type="button" ng-click="search()"><span class="glyphicon glyphicon-search"></span></button>
                     </span>
                 </div>
             </form>
             <div class="search progress" ng-show="loading">
                 <div class="progress-bar progress-bar-warning progress-bar-striped active"></div>
             </div>
-            <div class="listings" ng-if="soldListings.length > 0">
-                <div class="price-group" ng-repeat="priceGroup in soldListings">
-                    <img class="img-responsive" ng-src="{{ ::listing.imageUrl }}" ng-repeat="listing in priceGroup[1]" ng-click="viewListing(listing)">
-                    <div class="price">{{ ::priceGroup[0] }} &times; {{ ::priceGroup[1].length }}</div>
-                </div>
-            </div>
+
+            <section ng-show="soldListings.length || activeListings.length && !loading">
+                <article class="results sold">
+                    <header>
+                        <h1>SOLD</h1>
+                        <h2>({{ soldListings.length === 100 ? '>100' : soldListings.length }})</h2>
+                    </header>
+                    <h3>TOP LISTING</h3>
+                    <listings listings="topSoldListings" remove="removeSoldListing"></listings>
+                    <section class="pricing">
+                        <p>Average</p>
+                        <p>{{ averageSoldPrice | currency:"$":0 }}</p>
+                    </section>
+                    <section class="pricing">
+                        <p>Common</p>
+                        <p>
+                            <span>{{ commonSoldPrice.price }}</span>
+                            <span>({{ commonSoldPrice.count }})</span>
+                        </p>
+                    </section>
+                </article>
+                <article class="results active">
+                    <header>
+                        <h1>ACTIVE</h1>
+                        <h2>({{ activeListings.length === 100 ? '>100' : activeListings.length }})</h2>
+                    </header>
+                    <div class="top-heading">
+                        <h3>TOP LISTINGS</h3>
+                        <div class="remove-button" ng-click="removeTopActiveListings()">&times;</div>
+                    </div>
+                    <listings listings="topActiveListings" remove="removeActiveListing"></listings>
+                    <section class="pricing">
+                        <p>Average</p>
+                        <p>{{ averagePrice | currency:"$":0 }}</p>
+                    </section>
+                    <section class="pricing">
+                        <p>Common</p>
+                        <p>
+                            <span>{{ commonPrice.price }}</span>
+                            <span>({{ commonPrice.count }})</span>
+                        </p>
+                    </section>
+                </article>
+            </section>
         </div>
     </div>
     <script src="js/libs/jquery/dist/jquery.min.js"></script>
@@ -53,5 +91,6 @@
     <script src="js/ctrl/SearchCtrl.js"></script>
     <script src="js/service/Search.js"></script>
     <script src="js/directive/DropdownCheckbox.js"></script>
+    <script src="js/directive/listings.directive.js"></script>
 </body>
 </html>

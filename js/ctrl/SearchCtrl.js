@@ -19,15 +19,10 @@
              */
             $scope.soldListings = null;
             /**
-             * sale prices average for listings
-             * @type {number}
+             * collection of results of active listings on ebay
+             * @type {null}
              */
-            $scope.averageSalePrice = 0;
-            /**
-             * most common sale price in increments of ten
-             * @type {string}
-             */
-            $scope.commonSalePrice = null;
+            $scope.activeListings = null;
             /**
              * allowed signed/autographed/inscribed results
              * @type {boolean}
@@ -44,61 +39,120 @@
              */
             $scope.audiobooks = false;
             /**
-             * include results from active etsy listings
-             * @type {boolean}
-             */
-            $scope.forSale = false;
-            /**
              * include results pertaining to leatherbound copies
              * @type {boolean}
              */
             $scope.leather = false;
+            
+            function loadSoldListings() {
+                var listings = filterListings($scope.soldListings);
+                $scope.topSoldListings = getTopListings(listings, 1);
+                $scope.averageSoldPrice = getAveragePrice(listings);
+                $scope.commonSoldPrice = getMostCommonPrice(listings);
+            }
+            
+            function loadActiveListings() {
+                var listings = filterListings($scope.activeListings);
+                $scope.topActiveListings = getTopListings(listings, 6);
+                $scope.averagePrice = getAveragePrice(listings);
+                $scope.commonPrice = getMostCommonPrice(listings);
+            }
+
+            function filterListings(listings) {
+                return listings
+                    .filter(function(listing) {
+                        return (!listing.signed || $scope.signed) &&
+                            (!listing.lot || $scope.lots) &&
+                            (!listing.audiobook || $scope.audiobooks) &&
+                            (!listing.leather || $scope.leather);
+                    });
+            }
+            
+            function getAveragePrice(listings) {
+                return listings
+                    .reduce(function(sum, listing) {
+                        return sum + listing.price;
+                    }, 0) / listings.length;
+            }
+            
+            function getMostCommonPrice(listings) {
+                var mostCommonCount = 0,
+                    mostCommonPrice = '';
+                listings.reduce(function(priceCollection, listing) {
+                    var price = '$' + (Math.round(listing.price / 10) * 10).toString();
+                    if(!priceCollection[price]) {
+                        priceCollection[price] = 0;
+                    }
+                    priceCollection[price]++;
+                    if(mostCommonCount < priceCollection[price]) {
+                        mostCommonCount = priceCollection[price];
+                        mostCommonPrice = price;
+                    }
+                    return priceCollection;
+                }, {});
+                return {price: mostCommonPrice, count: mostCommonCount};
+            }
+            
+            function getTopListings(listings, count) {
+                return listings
+                    .sort(function(a, b) {
+                        return b.price - a.price;
+                    })
+                    .slice(0, count || 1);
+            }
+
+            $scope.removeSoldListing = function(listingUrl) {
+                removeListings([listingUrl], true);
+            };
+
+            $scope.removeActiveListing = function(listingUrl) {
+                removeListings([listingUrl]);
+            };
+
+            $scope.removeTopActiveListings = function() {
+                removeListings($scope.topActiveListings.map(function(l) { return l.url; }));
+            };
+
+            function removeListings(listingUrls, sold) {
+                var propName = (sold ? 'sold' : 'active') + 'Listings';
+                $scope[propName] = $scope[propName]
+                    .filter(function(listing) {
+                        return listingUrls.indexOf(listing.url) === -1;
+                    });
+                if(sold) {
+                    loadSoldListings();
+                } else {
+                    loadActiveListings();
+                }
+            }
 
             /**
              * fires off api call and does necessary math for price info
              * @param q
              * @returns {*}
              */
-            function loadSoldListings(q) {
-                return Search.search(q, $scope.forSale)
+            function getListings(q) {
+                var searchPieces = q.split(',').map(function(s) { return s.trim(); }),
+                    option = (searchPieces[1] || '').toLowerCase();
+                $scope.signed = option === 'signed';
+                $scope.leather = option === 'leather';
+                console.log(searchPieces, $scope.signed, $scope.leather);
+                return Search.search(searchPieces[0])
                     .then(function(listings) {
                         /**
                          * go to top of page to view all results
                          */
                         $window.scrollTo(0,0);
                         /**
-                         * apply search filters to results
-                         * @type {Array.<T>|*}
+                         * save listings to scope
                          */
-                        $scope.soldListings = listings;
+                        $scope.soldListings = listings.sold;
+                        $scope.activeListings = listings.active;
                         /**
-                         * get average price from filtered results
-                         * @type {number}
+                         * update ui to show current listings
                          */
-                        $scope.averageSalePrice = $scope.soldListings
-                                .reduce(function(sum, listing) {
-                                    return sum + listing.price;
-                                }, 0) / $scope.soldListings.length;
-                        /**
-                         * quick and dirty way of finding the lowest common price in increments of 10
-                         * @type {{}}
-                         */
-                        var priceCollection = {};
-                        var mostCommonCount = 0;
-                        var mostCommonPrice = '';
-                        $scope.soldListings.forEach(function(listing) {
-                            var price = '$' + (Math.round(listing.price / 10) * 10).toString();
-                            if(!priceCollection[price]) {
-                                priceCollection[price] = 1;
-                            } else {
-                                priceCollection[price]++;
-                            }
-                            if(mostCommonCount < priceCollection[price]) {
-                                mostCommonCount = priceCollection[price];
-                                mostCommonPrice = price;
-                            }
-                        });
-                        $scope.commonSalePrice = mostCommonPrice;
+                        loadSoldListings();
+                        loadActiveListings();
                     });
             }
 
@@ -113,16 +167,17 @@
              * triggered from dom, prepares page and fires off search
              * @returns {*}
              */
-            $scope.showSoldListings = function() {
+            $scope.search = function() {
                 /**
                  * blur the input field to allow full screen real estate for results
                  */
-                $('[ng-model="q"]').blur();
+                $('[ng-model="q"]')
+                    .blur();
                 /**
                  * clear the results from the previous search
                  * @type {Array}
                  */
-                $scope.soldListings = [];
+                $scope.soldListings = $scope.activeListings = [];
                 /***
                  * show progress bar
                  * @type {boolean}
@@ -131,7 +186,7 @@
                 /**
                  * make the api call to ebay
                  */
-                loadSoldListings($scope.q)
+                getListings($scope.q)
                     .then(doneLoading, doneLoading);
             };
 
@@ -147,7 +202,7 @@
              * clears search and prepares for new one
              */
             $scope.clearSearch = function() {
-                $scope.q = $scope.soldListings = null;
+                $scope.q = $scope.soldListings = $scope.activeListings = null;
             };
         });
 }());
