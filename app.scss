@@ -101,110 +101,121 @@
     }
   }
 
-  .results {
-    margin-bottom: 80px;
+  .results-container {
+    display: flex;
 
-    @mixin line-rule {
-      padding-bottom: 20px;
-      border-bottom: solid 1px rgba(black, 0.2);
-      margin-bottom: 20px;
-    }
+    .results {
+      width: 50%;
+      overflow: hidden;
+      box-sizing: border-box;
 
-    header {
-      display: flex;
-      align-items: center;
-
-      h1 {
-        font-size: 66px;
-        margin: 0;
+      @mixin line-rule {
+        padding-bottom: 20px;
+        border-bottom: solid 1px rgba(black, 0.2);
+        margin-bottom: 20px;
       }
 
-      h2 {
-        margin: 0;
-      }
-    }
-
-    .top-heading {
-      position: relative;
-    }
-
-    &.sold {
       header {
-        color: green;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        h1 {
+          font-size: 1.3em;
+          margin: 0;
+          font-weight: 700;
+        }
+
+        h2 {
+          margin: 0 0 0 5px;
+          font-size: 1em;
+          font-weight: 100;
+          background: black;
+          color: white;
+          padding: 5px;
+          border-radius: 10px;
+        }
       }
-    }
 
-    .listings {
-      margin-bottom: 20px;
-      @include line-rule();
-      display: flex;
-
-      .thumb {
-        max-width: 33%;
-        height: 150px;
-        background: magenta;
-        margin-right: 10px;
+      .top-heading {
+        position: relative;
       }
 
-      .details {
-        width: 100%;
+      &.sold {
+        header {
+          color: green;
 
-        p {
-          line-height: 1.5;
+          h2 {
+            background: green;
+          }
+        }
 
-          &.price {
-            line-height: 1;
-            font-size: 2em;
-            font-weight: bold;
+        .listings {
+          .listing {
+            border-color: limegreen;
           }
         }
       }
 
-      .listing {
-        display: flex;
-        position: relative;
-      }
-    }
-
-    &.active {
       .listings {
+        margin-bottom: 20px;
+        display: flex;
         flex-wrap: wrap;
+        width: 100%;
+
         .listing {
-          width: 33%;
-          display: block;
-          padding: 10px;
+          position: relative;
+          width: 100%;
+          border: dashed 2px rgba(black, 0.5);
+          margin: 5px;
+          padding: 5px;
           box-sizing: border-box;
 
           .thumb {
-            max-width: 100%;
-            margin: 0;
+            height: 150px;
+            display: block;
+            margin: auto;
           }
 
           .details {
+            width: 100%;
+
             p {
-              line-height: 0.9;
+              line-height: 1.5;
+
+              &.price {
+                line-height: 1;
+                font-size: 1.2em;
+                font-weight: bold;
+                text-align: center;
+                margin: 5px;
+              }
             }
           }
         }
       }
-    }
 
-    .pricing {
-      display: flex;
-      font-size: 2em;
-
-      p {
+      .pricing {
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+        font-size: 2em;
+        text-align: center;
         width: 50%;
-        text-align: right;
+        float: left;
 
-        &:first-child {
-          text-align: left;
-          font-weight: bold;
-          text-transform: uppercase;
-        }
+        p {
+          margin: 0;
 
-        span:last-child {
-          font-size: 0.5em;
+          &:first-child {
+            font-size: 0.5em;
+            text-transform: uppercase;
+            background: cyan;
+          }
+
+          span:last-child {
+            font-size: 0.5em;
+          }
         }
       }
     }

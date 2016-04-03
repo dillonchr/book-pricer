@@ -51,8 +51,12 @@
                         lot: !!listing.title[0].match(REGEX.LOT),
                         audiobook: !!listing.title[0].match(REGEX.AUDIOBOOK),
                         leather: !!listing.title[0].match(REGEX.LEATHER),
-                        forSale: forSale
+                        forSale: forSale,
+                        showTitle: false
                     };
+                })
+                .sort(function(a, b) {
+                    return b.price - a.price;
                 });
         }
 

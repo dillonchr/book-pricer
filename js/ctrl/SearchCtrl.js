@@ -3,6 +3,7 @@
 
     angular.module('ebay-searcher')
         .controller('SearchCtrl', function($scope, Search, $window) {
+            var VISIBLE_LISTING_COUNT_INCREMENT = 6;
             /**
              * query holder
              * @type {string}
@@ -43,20 +44,32 @@
              * @type {boolean}
              */
             $scope.leather = false;
-            
-            function loadSoldListings() {
+
+            function loadSoldListings(amount) {
                 var listings = filterListings($scope.soldListings);
-                $scope.topSoldListings = getTopListings(listings, 1);
+                $scope.topSoldListings = getTopListings(listings, amount || VISIBLE_LISTING_COUNT_INCREMENT);
                 $scope.averageSoldPrice = getAveragePrice(listings);
                 $scope.commonSoldPrice = getMostCommonPrice(listings);
             }
-            
-            function loadActiveListings() {
+
+            $scope.loadMoreSoldListings = function() {
+              if($scope.soldListings.length > $scope.topSoldListings.length) {
+                $scope.topSoldListings = getTopListings(filterListings($scope.soldListings), $scope.topSoldListings.length + VISIBLE_LISTING_COUNT_INCREMENT);
+              }
+            };
+
+            function loadActiveListings(amount) {
                 var listings = filterListings($scope.activeListings);
-                $scope.topActiveListings = getTopListings(listings, 6);
+                $scope.topActiveListings = getTopListings(listings, amount || VISIBLE_LISTING_COUNT_INCREMENT);
                 $scope.averagePrice = getAveragePrice(listings);
                 $scope.commonPrice = getMostCommonPrice(listings);
             }
+
+            $scope.loadMoreActiveListings = function() {
+              if($scope.activeListings.length > $scope.topActiveListings.length) {
+                $scope.topActiveListings = getTopListings(filterListings($scope.activeListings), $scope.topActiveListings.length + VISIBLE_LISTING_COUNT_INCREMENT);
+              }
+            };
 
             function filterListings(listings) {
                 return listings
@@ -67,19 +80,20 @@
                             (!listing.leather || $scope.leather);
                     });
             }
-            
+
             function getAveragePrice(listings) {
                 return listings
                     .reduce(function(sum, listing) {
                         return sum + listing.price;
                     }, 0) / listings.length;
             }
-            
+
             function getMostCommonPrice(listings) {
                 var mostCommonCount = 0,
                     mostCommonPrice = '';
                 listings.reduce(function(priceCollection, listing) {
-                    var price = '$' + (Math.round(listing.price / 10) * 10).toString();
+                    var newPrice = Math.round(listing.price / 10) * 10 || 1;
+                    var price = '$' + (newPrice).toString();
                     if(!priceCollection[price]) {
                         priceCollection[price] = 0;
                     }
@@ -92,38 +106,10 @@
                 }, {});
                 return {price: mostCommonPrice, count: mostCommonCount};
             }
-            
+
             function getTopListings(listings, count) {
                 return listings
-                    .sort(function(a, b) {
-                        return b.price - a.price;
-                    })
                     .slice(0, count || 1);
-            }
-
-            $scope.removeSoldListing = function(listingUrl) {
-                removeListings([listingUrl], true);
-            };
-
-            $scope.removeActiveListing = function(listingUrl) {
-                removeListings([listingUrl]);
-            };
-
-            $scope.removeTopActiveListings = function() {
-                removeListings($scope.topActiveListings.map(function(l) { return l.url; }));
-            };
-
-            function removeListings(listingUrls, sold) {
-                var propName = (sold ? 'sold' : 'active') + 'Listings';
-                $scope[propName] = $scope[propName]
-                    .filter(function(listing) {
-                        return listingUrls.indexOf(listing.url) === -1;
-                    });
-                if(sold) {
-                    loadSoldListings();
-                } else {
-                    loadActiveListings();
-                }
             }
 
             /**
@@ -136,7 +122,6 @@
                     option = (searchPieces[1] || '').toLowerCase();
                 $scope.signed = option === 'signed';
                 $scope.leather = option === 'leather';
-                console.log(searchPieces, $scope.signed, $scope.leather);
                 return Search.search(searchPieces[0])
                     .then(function(listings) {
                         /**

@@ -9,7 +9,7 @@
 </head>
 <body>
     <div ng-app="ebay-searcher">
-        <header ng-controller="SearchCtrl" class="container-fluid">
+        <div ng-controller="SearchCtrl" class="container-fluid">
             <form ng-submit="search()" class="search-form">
                 <div class="input-group">
                     <span class="input-group-btn">
@@ -37,14 +37,12 @@
                 <div class="progress-bar progress-bar-warning progress-bar-striped active"></div>
             </div>
 
-            <section ng-show="soldListings.length || activeListings.length && !loading">
+            <section ng-show="soldListings.length || activeListings.length && !loading" class="results-container">
                 <article class="results sold">
                     <header>
                         <h1>SOLD</h1>
-                        <h2>({{ soldListings.length === 100 ? '>100' : soldListings.length }})</h2>
+                        <h2>{{ soldListings.length === 100 ? '>100' : soldListings.length }}</h2>
                     </header>
-                    <h3>TOP LISTING</h3>
-                    <listings listings="topSoldListings" remove="removeSoldListing"></listings>
                     <section class="pricing">
                         <p>Average</p>
                         <p>{{ averageSoldPrice | currency:"$":0 }}</p>
@@ -56,17 +54,14 @@
                             <span>({{ commonSoldPrice.count }})</span>
                         </p>
                     </section>
+                    <listings listings="topSoldListings"></listings>
+                    <infinite-scroll action="loadMoreSoldListings()"></infinite-scroll>
                 </article>
                 <article class="results active">
                     <header>
                         <h1>ACTIVE</h1>
-                        <h2>({{ activeListings.length === 100 ? '>100' : activeListings.length }})</h2>
+                        <h2>{{ activeListings.length === 100 ? '>100' : activeListings.length }}</h2>
                     </header>
-                    <div class="top-heading">
-                        <h3>TOP LISTINGS</h3>
-                        <div class="remove-button" ng-click="removeTopActiveListings()">&times;</div>
-                    </div>
-                    <listings listings="topActiveListings" remove="removeActiveListing"></listings>
                     <section class="pricing">
                         <p>Average</p>
                         <p>{{ averagePrice | currency:"$":0 }}</p>
@@ -78,6 +73,8 @@
                             <span>({{ commonPrice.count }})</span>
                         </p>
                     </section>
+                    <listings listings="topActiveListings"></listings>
+                    <infinite-scroll action="loadMoreActiveListings()"></infinite-scroll>
                 </article>
             </section>
         </div>
@@ -92,5 +89,6 @@
     <script src="js/service/Search.js"></script>
     <script src="js/directive/DropdownCheckbox.js"></script>
     <script src="js/directive/listings.directive.js"></script>
+    <script src="js/directive/infinite-scroll.directive.js"></script>
 </body>
 </html>

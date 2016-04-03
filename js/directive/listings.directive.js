@@ -12,13 +12,12 @@
                 remove: '&'
             },
             template: '<section class="listings">' +
-                '<div class="listing" ng-repeat="listing in listings">' +
+                '<div class="listing" ng-repeat="listing in listings" ng-click="listing.showTitle = !listing.showTitle;">' +
                     '<img ng-src="{{ ::listing.imageUrl }}" class="thumb">' +
                     '<div class="details"> ' +
                         '<p class="price">{{ ::listing.price | currency:"$":0 }}</p>' +
-                        '<p>{{ ::listing.name }}</p>' +
+                        '<p ng-show="listing.showTitle">{{ ::listing.name }}</p>' +
                     '</div>' +
-                    '<div class="remove-button" ng-click="removeListing(listing)">&times;</div>' +
                 '</div>' +
             '</section>',
             link: function(scope) {
