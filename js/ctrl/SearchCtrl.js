@@ -44,30 +44,46 @@
              * @type {boolean}
              */
             $scope.leather = false;
+            /**
+             * placeholder for the search box
+             * @type {string}
+             */
+            $scope.placeholder = $window.localStorage.getItem('LAST_SEARCH') || 'What\'s the Bookworth?';
+
+            function getListingCountIncrement() {
+                if($($window).width() >= 768) {
+                    return VISIBLE_LISTING_COUNT_INCREMENT * 2.5;
+                }
+                return VISIBLE_LISTING_COUNT_INCREMENT;
+            }
 
             function loadSoldListings(amount) {
                 var listings = filterListings($scope.soldListings);
-                $scope.topSoldListings = getTopListings(listings, amount || VISIBLE_LISTING_COUNT_INCREMENT);
+                $scope.highestSoldPrice = listings[0].price;
+                $scope.lowestSoldPrice = listings[listings.length - 1].price;
+                $scope.topSoldListings = getTopListings(listings, amount || getListingCountIncrement());
                 $scope.averageSoldPrice = getAveragePrice(listings);
                 $scope.commonSoldPrice = getMostCommonPrice(listings);
             }
 
             $scope.loadMoreSoldListings = function() {
               if($scope.soldListings.length > $scope.topSoldListings.length) {
-                $scope.topSoldListings = getTopListings(filterListings($scope.soldListings), $scope.topSoldListings.length + VISIBLE_LISTING_COUNT_INCREMENT);
+                $scope.topSoldListings = getTopListings(filterListings($scope.soldListings), $scope.topSoldListings.length + getListingCountIncrement());
               }
             };
 
             function loadActiveListings(amount) {
                 var listings = filterListings($scope.activeListings);
-                $scope.topActiveListings = getTopListings(listings, amount || VISIBLE_LISTING_COUNT_INCREMENT);
+                $scope.highestActivePrice = listings[0].price;
+                $scope.lowestActivePrice = listings[listings.length - 1].price;
+                $scope.topActiveListings = getTopListings(listings, amount || getListingCountIncrement());
                 $scope.averagePrice = getAveragePrice(listings);
                 $scope.commonPrice = getMostCommonPrice(listings);
             }
 
             $scope.loadMoreActiveListings = function() {
               if($scope.activeListings.length > $scope.topActiveListings.length) {
-                $scope.topActiveListings = getTopListings(filterListings($scope.activeListings), $scope.topActiveListings.length + VISIBLE_LISTING_COUNT_INCREMENT);
+                $scope.topActiveListings = getTopListings(filterListings($scope.activeListings), $scope.topActiveListings.length + getListingCountIncrement());
               }
             };
 
@@ -153,6 +169,11 @@
              * @returns {*}
              */
             $scope.search = function() {
+                if(!$scope.q) {
+                    return;
+                }
+                $window.localStorage.setItem('LAST_SEARCH', $scope.q);
+                $scope.placeholder = $scope.q;
                 /**
                  * blur the input field to allow full screen real estate for results
                  */
@@ -188,6 +209,7 @@
              */
             $scope.clearSearch = function() {
                 $scope.q = $scope.soldListings = $scope.activeListings = null;
+                $('.search-form input').focus();
             };
         });
 }());

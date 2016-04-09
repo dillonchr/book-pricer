@@ -10,7 +10,7 @@
                   action: '&'
               },
               link: function(scope, elem) {
-                  $(window)
+                  $($window)
                     .scroll(function() {
                         if($(this).scrollTop() + $(this).height() >= elem.offset().top) {
                             scope.$evalAsync(function() {

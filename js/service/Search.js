@@ -9,7 +9,7 @@
             REGEX = {
                 AUDIOBOOK: /audiobook|[^\w]cd[^\w]|cds/i,
                 LEATHER: /[^\w]leather|deluxe/i,
-                LOT: /[^\w]set[^\w]|lot of/i,
+                LOT: /[^\w]set[^\w]|lot of|[^\w]lot[^\w]/i,
                 SIGNED: /signed|inscribed|autograph/i
             };
 

@@ -1,3 +1,32 @@
+$pink: #E5518D;
+$blue: #49AEB6;
+$paper: #EAE1D8;
+$ink: #323226;
+
+@import url(https://fonts.googleapis.com/css?family=Poppins:400,700);
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: $paper;
+  color: $ink;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background: $ink;
+  padding: 20px;
+
+  .logo {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: white;
+    margin: 0;
+  }
+}
+
 [ng-controller="SearchCtrl"] {
 
   .remove-button {
@@ -40,7 +69,61 @@
   }
 
   .search-form {
-    margin: 20px 0;
+    $input-height: 40px;
+    margin: 0;
+    display: flex;
+    height: $input-height;
+    border-top: solid 2px $pink;
+
+    input {
+      flex-grow: 1;
+      height: 100%;
+      -webkit-appearance: none;
+      border: none;
+      padding: 10px;
+      box-sizing: border-box;
+      outline: none;
+      font-size: $input-height / 2;
+    }
+
+    .button {
+      width: $input-height;
+      height: $input-height;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &.clear {
+        background: maroon;
+      }
+
+      &.search {
+        background: $pink;
+
+        .spinner {
+          display: none;
+        }
+
+        &.searching {
+          .magnifier {
+            display: none;
+          }
+
+          .spinner {
+            display: inline;
+          }
+        }
+      }
+
+      svg {
+        width: 50%;
+        height: 50%;
+
+        path {
+          fill: white;
+        }
+      }
+    }
   }
 
   .search.progress .progress-bar {
@@ -103,6 +186,7 @@
 
   .results-container {
     display: flex;
+    border-top: solid 2px $blue;
 
     .results {
       width: 50%;
@@ -115,25 +199,14 @@
         margin-bottom: 20px;
       }
 
-      header {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+      h2 {
+        font-size: 1.3em;
+        margin: 20px;
+        font-weight: 700;
+        text-align: center;
 
-        h1 {
-          font-size: 1.3em;
-          margin: 0;
-          font-weight: 700;
-        }
-
-        h2 {
-          margin: 0 0 0 5px;
-          font-size: 1em;
-          font-weight: 100;
-          background: black;
-          color: white;
-          padding: 5px;
-          border-radius: 10px;
+        @media screen and (max-width: 748px) {
+          font-size: 0.8em;
         }
       }
 
@@ -141,18 +214,78 @@
         position: relative;
       }
 
-      &.sold {
-        header {
-          color: green;
+      .graph {
+        display: flex;
+        align-items: center;
+        margin: 0 20px 20px 20px;
 
-          h2 {
-            background: green;
+        @media screen and (max-width: 748px) {
+          flex-direction: column;
+          width: 100%;
+          margin: 0 0 20px 0;
+        }
+
+        .end {
+          text-align: center;
+          border: solid 1px $blue;
+          background: white;
+          padding: 5px;
+          box-sizing: border-box;
+
+          @media screen and (max-width: 748px) {
+            width: 100%;
+            border: none;
+            background: none;
+            font-weight: 700;
+
+            &:before {
+              font-weight: 400;
+            }
+
+            &.low:before {
+              content: 'Lowest ';
+            }
+
+            &.high:before {
+              content: 'Highest ';
+            }
           }
         }
 
-        .listings {
-          .listing {
-            border-color: limegreen;
+        .bar {
+          background: darken($blue, 30);
+          flex-grow: 1;
+
+          @media screen and (max-width: 748px) {
+            width: 100%;
+          }
+
+          .fill {
+            background: $blue;
+            margin: 0;
+            color: white;
+            text-align: center;
+            padding: 6px;
+            box-sizing: border-box;
+          }
+        }
+      }
+
+      &.sold {
+        border-right: solid 2px $blue;
+
+        .graph {
+
+          .end {
+            border-color: $pink;
+          }
+
+          .bar {
+            background: darken($pink, 30);
+
+            .fill {
+              background: $pink;
+            }
           }
         }
       }
@@ -165,38 +298,67 @@
 
         .listing {
           position: relative;
-          width: 100%;
-          border: dashed 2px rgba(black, 0.5);
-          margin: 5px;
+          margin: 0;
           padding: 5px;
           box-sizing: border-box;
+          float: left;
+          width: 25%;
 
-          .thumb {
-            height: 150px;
-            display: block;
-            margin: auto;
+          @media screen and (max-width: 1100px) {
+            width: 33%;
           }
 
-          .details {
+          @media screen and (max-width: 980px) {
+            width: 50%;
+          }
+
+          @media screen and (max-width: 767px) {
             width: 100%;
+          }
 
-            p {
-              line-height: 1.5;
+          .always-showing {
+            display: flex;
+            flex-direction: column;
 
-              &.price {
-                line-height: 1;
-                font-size: 1.2em;
-                font-weight: bold;
-                text-align: center;
-                margin: 5px;
-              }
+            .thumb {
+              display: block;
+              margin: auto;
+              max-width: 80%;
+            }
+
+            p.price {
+              line-height: 1;
+              font-size: 1.2em;
+              font-weight: bold;
+              text-align: center;
+              margin: 10px;
+              display: inline-block;
+            }
+          }
+
+          .title {
+            display: none;
+            line-height: 1;
+            text-align: left;
+            margin: 0;
+
+            @media screen and (max-width: 748px) {
+              font-size: 0.8em;
+            }
+          }
+
+          &.show-title {
+            background: white;
+
+            .title {
+              display: block;
             }
           }
         }
       }
 
       .pricing {
-        display: flex;
+        display: none;
         flex-direction: column-reverse;
         align-items: center;
         font-size: 2em;
@@ -210,7 +372,6 @@
           &:first-child {
             font-size: 0.5em;
             text-transform: uppercase;
-            background: cyan;
           }
 
           span:last-child {

@@ -2,51 +2,44 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>eBay Searcher</title>
-    <link rel="stylesheet" href="js/libs/bootstrap/dist/css/bootstrap.min.css">
+    <title>B&#x221e;kworth</title>
     <meta name="viewport" content="width=device-width,user-scalable=0,maximum-scale=1.0">
     <link rel="stylesheet" href="app/css/app.css">
 </head>
 <body>
     <div ng-app="ebay-searcher">
+        <header>
+            <p class="logo">Bookworth.</p>
+        </header>
         <div ng-controller="SearchCtrl" class="container-fluid">
             <form ng-submit="search()" class="search-form">
-                <div class="input-group">
-                    <span class="input-group-btn">
-                        <button class="btn btn-danger" type="button" ng-click="clearSearch()">&times;</button>
-                        <!--<div class="btn-group">-->
-                            <!--<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">-->
-                                <!--<span class="glyphicon glyphicon-wrench"></span>-->
-                            <!--</button>-->
-                            <!--<ul class="dropdown-menu" role="menu">-->
-                                <!--<li dropdown-checkbox="forSale" label="Include Live Listings"></li>-->
-                                <!--<li dropdown-checkbox="signed" label="Signed"></li>-->
-                                <!--<li dropdown-checkbox="lots" label="Lots"></li>-->
-                                <!--<li dropdown-checkbox="audiobooks" label="Audiobooks"></li>-->
-                                <!--<li dropdown-checkbox="leather" label="Leatherbound"></li>-->
-                            <!--</ul>-->
-                        <!--</div>-->
-                    </span>
-                    <input type="search" class="form-control" ng-model="q" placeholder="Search Keywords">
-                    <span class="input-group-btn">
-                        <button class="btn btn-info" type="button" ng-click="search()"><span class="glyphicon glyphicon-search"></span></button>
-                    </span>
+                <input type="text" ng-model="q" placeholder="{{ placeholder }}">
+                <div class="button clear" ng-click="clearSearch()">
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 174.239 174.239" xml:space="preserve">
+                        <path d="M146.537,1.047c-1.396-1.396-3.681-1.396-5.077,0L89.658,52.849c-1.396,1.396-3.681,1.396-5.077,0L32.78,1.047  c-1.396-1.396-3.681-1.396-5.077,0L1.047,27.702c-1.396,1.396-1.396,3.681,0,5.077l51.802,51.802c1.396,1.396,1.396,3.681,0,5.077  L1.047,141.46c-1.396,1.396-1.396,3.681,0,5.077l26.655,26.655c1.396,1.396,3.681,1.396,5.077,0l51.802-51.802  c1.396-1.396,3.681-1.396,5.077,0l51.801,51.801c1.396,1.396,3.681,1.396,5.077,0l26.655-26.655c1.396-1.396,1.396-3.681,0-5.077  l-51.801-51.801c-1.396-1.396-1.396-3.681,0-5.077l51.801-51.801c1.396-1.396,1.396-3.681,0-5.077L146.537,1.047z"></path>
+                    </svg>
+                </div>
+                <div class="button search" ng-click="search()" ng-class="{searching: loading}">
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 317.452 317.452" xml:space="preserve" class="magnifier">
+                        <path d="M192.739,0C122.695,0,63.785,56.779,63.785,126.845c0,29.251,10,56.098,26.621,77.549L0,294.777l22.675,22.675     l90.383-90.406c21.451,16.621,48.298,26.621,77.549,26.621c70.044,0,126.845-56.779,126.845-126.845S262.782,0,192.739,0z      M192.739,226.751c-60.044,0-102.038-41.994-102.038-102.038S132.695,22.675,192.739,22.675S294.777,64.67,294.777,124.713     S252.782,226.751,192.739,226.751z"></path>
+                    </svg>
+                    <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="40px" height="40px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve" class="spinner">
+                        <path fill="#000" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z" transform="rotate(30 25 25)">
+                            <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite"></animateTransform>
+                        </path>
+                    </svg>
                 </div>
             </form>
-            <div class="search progress" ng-show="loading">
-                <div class="progress-bar progress-bar-warning progress-bar-striped active"></div>
-            </div>
-
             <section ng-show="soldListings.length || activeListings.length && !loading" class="results-container">
                 <article class="results sold">
-                    <header>
-                        <h1>SOLD</h1>
-                        <h2>{{ soldListings.length === 100 ? '>100' : soldListings.length }}</h2>
-                    </header>
-                    <section class="pricing">
-                        <p>Average</p>
-                        <p>{{ averageSoldPrice | currency:"$":0 }}</p>
-                    </section>
+                    <h2>Top {{ soldListings.length }} sold listings</h2>
+                    <div class="graph">
+                        <div class="low end">{{ lowestSoldPrice | currency:"$":0 }}</div>
+                        <div class="bar">
+                            <div class="fill" style="width: {{ averageSoldPrice / ((highestSoldPrice - lowestSoldPrice) / 100) }}%">{{ averageSoldPrice | currency:"$":0 }}</div>
+                        </div>
+                        <div class="high end">{{ highestSoldPrice | currency:"$":0 }}</div>
+                    </div>
                     <section class="pricing">
                         <p>Common</p>
                         <p>
@@ -58,14 +51,14 @@
                     <infinite-scroll action="loadMoreSoldListings()"></infinite-scroll>
                 </article>
                 <article class="results active">
-                    <header>
-                        <h1>ACTIVE</h1>
-                        <h2>{{ activeListings.length === 100 ? '>100' : activeListings.length }}</h2>
-                    </header>
-                    <section class="pricing">
-                        <p>Average</p>
-                        <p>{{ averagePrice | currency:"$":0 }}</p>
-                    </section>
+                    <h2>Top {{ activeListings.length }} active listings</h2>
+                    <div class="graph">
+                        <div class="low end">{{ lowestActivePrice | currency:"$":0 }}</div>
+                        <div class="bar">
+                            <div class="fill" style="width: {{ averagePrice / ((highestActivePrice - lowestActivePrice) / 100) }}%">{{ averagePrice | currency:"$":0 }}</div>
+                        </div>
+                        <div class="high end">{{ highestActivePrice | currency:"$":0 }}</div>
+                    </div>
                     <section class="pricing">
                         <p>Common</p>
                         <p>

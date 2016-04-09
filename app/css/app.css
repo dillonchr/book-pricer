@@ -1,3 +1,22 @@
+@import url(https://fonts.googleapis.com/css?family=Poppins:400,700);
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #EAE1D8;
+  color: #323226;
+  margin: 0;
+  padding: 0; }
+
+header {
+  background: #323226;
+  padding: 20px; }
+  header .logo {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: white;
+    margin: 0; }
+
 [ng-controller="SearchCtrl"] .remove-button {
   cursor: pointer;
   position: absolute;
@@ -29,7 +48,40 @@
       float: right; }
 
 [ng-controller="SearchCtrl"] .search-form {
-  margin: 20px 0; }
+  margin: 0;
+  display: flex;
+  height: 40px;
+  border-top: solid 2px #E5518D; }
+  [ng-controller="SearchCtrl"] .search-form input {
+    flex-grow: 1;
+    height: 100%;
+    -webkit-appearance: none;
+    border: none;
+    padding: 10px;
+    box-sizing: border-box;
+    outline: none;
+    font-size: 20px; }
+  [ng-controller="SearchCtrl"] .search-form .button {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center; }
+    [ng-controller="SearchCtrl"] .search-form .button.clear {
+      background: maroon; }
+    [ng-controller="SearchCtrl"] .search-form .button.search {
+      background: #E5518D; }
+      [ng-controller="SearchCtrl"] .search-form .button.search .spinner {
+        display: none; }
+      [ng-controller="SearchCtrl"] .search-form .button.search.searching .magnifier {
+        display: none; }
+      [ng-controller="SearchCtrl"] .search-form .button.search.searching .spinner {
+        display: inline; }
+    [ng-controller="SearchCtrl"] .search-form .button svg {
+      width: 50%;
+      height: 50%; }
+      [ng-controller="SearchCtrl"] .search-form .button svg path {
+        fill: white; }
 
 [ng-controller="SearchCtrl"] .search.progress .progress-bar {
   width: 100%; }
@@ -76,35 +128,70 @@
     border-radius: 10px; }
 
 [ng-controller="SearchCtrl"] .results-container {
-  display: flex; }
+  display: flex;
+  border-top: solid 2px #49AEB6; }
   [ng-controller="SearchCtrl"] .results-container .results {
     width: 50%;
     overflow: hidden;
     box-sizing: border-box; }
-    [ng-controller="SearchCtrl"] .results-container .results header {
-      display: flex;
-      align-items: center;
-      justify-content: center; }
-      [ng-controller="SearchCtrl"] .results-container .results header h1 {
-        font-size: 1.3em;
-        margin: 0;
-        font-weight: 700; }
-      [ng-controller="SearchCtrl"] .results-container .results header h2 {
-        margin: 0 0 0 5px;
-        font-size: 1em;
-        font-weight: 100;
-        background: black;
-        color: white;
-        padding: 5px;
-        border-radius: 10px; }
+    [ng-controller="SearchCtrl"] .results-container .results h2 {
+      font-size: 1.3em;
+      margin: 20px;
+      font-weight: 700;
+      text-align: center; }
+      @media screen and (max-width: 748px) {
+        [ng-controller="SearchCtrl"] .results-container .results h2 {
+          font-size: 0.8em; } }
     [ng-controller="SearchCtrl"] .results-container .results .top-heading {
       position: relative; }
-    [ng-controller="SearchCtrl"] .results-container .results.sold header {
-      color: green; }
-      [ng-controller="SearchCtrl"] .results-container .results.sold header h2 {
-        background: green; }
-    [ng-controller="SearchCtrl"] .results-container .results.sold .listings .listing {
-      border-color: limegreen; }
+    [ng-controller="SearchCtrl"] .results-container .results .graph {
+      display: flex;
+      align-items: center;
+      margin: 0 20px 20px 20px; }
+      @media screen and (max-width: 748px) {
+        [ng-controller="SearchCtrl"] .results-container .results .graph {
+          flex-direction: column;
+          width: 100%;
+          margin: 0 0 20px 0; } }
+      [ng-controller="SearchCtrl"] .results-container .results .graph .end {
+        text-align: center;
+        border: solid 1px #49AEB6;
+        background: white;
+        padding: 5px;
+        box-sizing: border-box; }
+        @media screen and (max-width: 748px) {
+          [ng-controller="SearchCtrl"] .results-container .results .graph .end {
+            width: 100%;
+            border: none;
+            background: none;
+            font-weight: 700; }
+            [ng-controller="SearchCtrl"] .results-container .results .graph .end:before {
+              font-weight: 400; }
+            [ng-controller="SearchCtrl"] .results-container .results .graph .end.low:before {
+              content: 'Lowest '; }
+            [ng-controller="SearchCtrl"] .results-container .results .graph .end.high:before {
+              content: 'Highest '; } }
+      [ng-controller="SearchCtrl"] .results-container .results .graph .bar {
+        background: #1d4649;
+        flex-grow: 1; }
+        @media screen and (max-width: 748px) {
+          [ng-controller="SearchCtrl"] .results-container .results .graph .bar {
+            width: 100%; } }
+        [ng-controller="SearchCtrl"] .results-container .results .graph .bar .fill {
+          background: #49AEB6;
+          margin: 0;
+          color: white;
+          text-align: center;
+          padding: 6px;
+          box-sizing: border-box; }
+    [ng-controller="SearchCtrl"] .results-container .results.sold {
+      border-right: solid 2px #49AEB6; }
+      [ng-controller="SearchCtrl"] .results-container .results.sold .graph .end {
+        border-color: #E5518D; }
+      [ng-controller="SearchCtrl"] .results-container .results.sold .graph .bar {
+        background: #891444; }
+        [ng-controller="SearchCtrl"] .results-container .results.sold .graph .bar .fill {
+          background: #E5518D; }
     [ng-controller="SearchCtrl"] .results-container .results .listings {
       margin-bottom: 20px;
       display: flex;
@@ -112,27 +199,48 @@
       width: 100%; }
       [ng-controller="SearchCtrl"] .results-container .results .listings .listing {
         position: relative;
-        width: 100%;
-        border: dashed 2px rgba(0, 0, 0, 0.5);
-        margin: 5px;
+        margin: 0;
         padding: 5px;
-        box-sizing: border-box; }
-        [ng-controller="SearchCtrl"] .results-container .results .listings .listing .thumb {
-          height: 150px;
-          display: block;
-          margin: auto; }
-        [ng-controller="SearchCtrl"] .results-container .results .listings .listing .details {
-          width: 100%; }
-          [ng-controller="SearchCtrl"] .results-container .results .listings .listing .details p {
-            line-height: 1.5; }
-            [ng-controller="SearchCtrl"] .results-container .results .listings .listing .details p.price {
-              line-height: 1;
-              font-size: 1.2em;
-              font-weight: bold;
-              text-align: center;
-              margin: 5px; }
+        box-sizing: border-box;
+        float: left;
+        width: 25%; }
+        @media screen and (max-width: 1100px) {
+          [ng-controller="SearchCtrl"] .results-container .results .listings .listing {
+            width: 33%; } }
+        @media screen and (max-width: 980px) {
+          [ng-controller="SearchCtrl"] .results-container .results .listings .listing {
+            width: 50%; } }
+        @media screen and (max-width: 767px) {
+          [ng-controller="SearchCtrl"] .results-container .results .listings .listing {
+            width: 100%; } }
+        [ng-controller="SearchCtrl"] .results-container .results .listings .listing .always-showing {
+          display: flex;
+          flex-direction: column; }
+          [ng-controller="SearchCtrl"] .results-container .results .listings .listing .always-showing .thumb {
+            display: block;
+            margin: auto;
+            max-width: 80%; }
+          [ng-controller="SearchCtrl"] .results-container .results .listings .listing .always-showing p.price {
+            line-height: 1;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-align: center;
+            margin: 10px;
+            display: inline-block; }
+        [ng-controller="SearchCtrl"] .results-container .results .listings .listing .title {
+          display: none;
+          line-height: 1;
+          text-align: left;
+          margin: 0; }
+          @media screen and (max-width: 748px) {
+            [ng-controller="SearchCtrl"] .results-container .results .listings .listing .title {
+              font-size: 0.8em; } }
+        [ng-controller="SearchCtrl"] .results-container .results .listings .listing.show-title {
+          background: white; }
+          [ng-controller="SearchCtrl"] .results-container .results .listings .listing.show-title .title {
+            display: block; }
     [ng-controller="SearchCtrl"] .results-container .results .pricing {
-      display: flex;
+      display: none;
       flex-direction: column-reverse;
       align-items: center;
       font-size: 2em;
@@ -143,7 +251,6 @@
         margin: 0; }
         [ng-controller="SearchCtrl"] .results-container .results .pricing p:first-child {
           font-size: 0.5em;
-          text-transform: uppercase;
-          background: cyan; }
+          text-transform: uppercase; }
         [ng-controller="SearchCtrl"] .results-container .results .pricing p span:last-child {
           font-size: 0.5em; }
