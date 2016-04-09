@@ -140,6 +140,7 @@
                 $scope.leather = option === 'leather';
                 return Search.search(searchPieces[0])
                     .then(function(listings) {
+                        ga('send', 'event', 'search', 'loaded', $scope.q, listings.sold + listings.active);
                         /**
                          * go to top of page to view all results
                          */
@@ -174,6 +175,8 @@
                 }
                 $window.localStorage.setItem('LAST_SEARCH', $scope.q);
                 $scope.placeholder = $scope.q;
+
+                ga('send', 'event', 'search', 'search', $scope.q);
                 /**
                  * blur the input field to allow full screen real estate for results
                  */
