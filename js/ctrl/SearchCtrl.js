@@ -52,18 +52,20 @@
 
             function getListingCountIncrement() {
                 if($($window).width() >= 768) {
-                    return VISIBLE_LISTING_COUNT_INCREMENT * 2.5;
+                    return VISIBLE_LISTING_COUNT_INCREMENT * 3;
                 }
                 return VISIBLE_LISTING_COUNT_INCREMENT;
             }
 
             function loadSoldListings(amount) {
-                var listings = filterListings($scope.soldListings);
+              var listings = $scope.soldListings;
+              if(!!listings.length) {
                 $scope.highestSoldPrice = listings[0].price;
                 $scope.lowestSoldPrice = listings[listings.length - 1].price;
                 $scope.topSoldListings = getTopListings(listings, amount || getListingCountIncrement());
                 $scope.averageSoldPrice = getAveragePrice(listings);
                 $scope.commonSoldPrice = getMostCommonPrice(listings);
+              }
             }
 
             $scope.loadMoreSoldListings = function() {
@@ -73,12 +75,14 @@
             };
 
             function loadActiveListings(amount) {
-                var listings = filterListings($scope.activeListings);
+              var listings = $scope.activeListings;
+              if(!!listings.length) {
                 $scope.highestActivePrice = listings[0].price;
                 $scope.lowestActivePrice = listings[listings.length - 1].price;
                 $scope.topActiveListings = getTopListings(listings, amount || getListingCountIncrement());
                 $scope.averagePrice = getAveragePrice(listings);
                 $scope.commonPrice = getMostCommonPrice(listings);
+              }
             }
 
             $scope.loadMoreActiveListings = function() {
@@ -148,8 +152,8 @@
                         /**
                          * save listings to scope
                          */
-                        $scope.soldListings = listings.sold;
-                        $scope.activeListings = listings.active;
+                        $scope.soldListings = filterListings(listings.sold);
+                        $scope.activeListings = filterListings(listings.active);
                         /**
                          * update ui to show current listings
                          */
@@ -170,6 +174,7 @@
              * @returns {*}
              */
             $scope.search = function() {
+              blurSearch();
                 if(!$scope.q) {
                     return;
                 }
@@ -216,5 +221,9 @@
                 $scope.$broadcast('focus-field');
               });
             };
+
+            function blurSearch() {
+              $scope.$broadcast('blur-field');
+            }
         });
 }());

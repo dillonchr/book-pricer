@@ -33,7 +33,7 @@
             <section ng-show="soldListings.length || activeListings.length && !loading" class="results-container">
                 <article class="results sold">
                     <h2>Top {{ soldListings.length }} sold listings</h2>
-                    <div class="graph">
+                    <div class="graph" ng-show="soldListings.length > 1">
                         <div class="low end">{{ lowestSoldPrice | currency:"$":0 }}</div>
                         <div class="bar">
                             <div class="fill" style="width: {{ averageSoldPrice / ((highestSoldPrice - lowestSoldPrice) / 100) }}%">{{ averageSoldPrice | currency:"$":0 }}</div>
@@ -52,7 +52,7 @@
                 </article>
                 <article class="results active">
                     <h2>Top {{ activeListings.length }} active listings</h2>
-                    <div class="graph">
+                    <div class="graph" ng-show="activeListings.length > 1">
                         <div class="low end">{{ lowestActivePrice | currency:"$":0 }}</div>
                         <div class="bar">
                             <div class="fill" style="width: {{ averagePrice / ((highestActivePrice - lowestActivePrice) / 100) }}%">{{ averagePrice | currency:"$":0 }}</div>
