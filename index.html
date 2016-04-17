@@ -13,7 +13,7 @@
         </header>
         <div ng-controller="SearchCtrl" class="container-fluid">
             <form ng-submit="search()" class="search-form">
-                <input type="text" ng-model="q" placeholder="{{ placeholder }}">
+                <input type="text" ng-model="q" focus-field placeholder="{{ placeholder }}">
                 <div class="button clear" ng-click="clearSearch()">
                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 174.239 174.239" xml:space="preserve">
                         <path d="M146.537,1.047c-1.396-1.396-3.681-1.396-5.077,0L89.658,52.849c-1.396,1.396-3.681,1.396-5.077,0L32.78,1.047  c-1.396-1.396-3.681-1.396-5.077,0L1.047,27.702c-1.396,1.396-1.396,3.681,0,5.077l51.802,51.802c1.396,1.396,1.396,3.681,0,5.077  L1.047,141.46c-1.396,1.396-1.396,3.681,0,5.077l26.655,26.655c1.396,1.396,3.681,1.396,5.077,0l51.802-51.802  c1.396-1.396,3.681-1.396,5.077,0l51.801,51.801c1.396,1.396,3.681,1.396,5.077,0l26.655-26.655c1.396-1.396,1.396-3.681,0-5.077  l-51.801-51.801c-1.396-1.396-1.396-3.681,0-5.077l51.801-51.801c1.396-1.396,1.396-3.681,0-5.077L146.537,1.047z"></path>
@@ -83,6 +83,7 @@
     <script src="js/directive/DropdownCheckbox.js"></script>
     <script src="js/directive/listings.directive.js"></script>
     <script src="js/directive/infinite-scroll.directive.js"></script>
+    <script src="js/directive/focus-field.directive.js"></script>
     <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
                     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

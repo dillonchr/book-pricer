@@ -2,7 +2,7 @@
     'use strict';
 
     angular.module('ebay-searcher')
-        .controller('SearchCtrl', function($scope, Search, $window) {
+        .controller('SearchCtrl', function($scope, Search, $window, $timeout) {
             var VISIBLE_LISTING_COUNT_INCREMENT = 6;
             /**
              * query holder
@@ -211,8 +211,10 @@
              * clears search and prepares for new one
              */
             $scope.clearSearch = function() {
+              $timeout(function() {
                 $scope.q = $scope.soldListings = $scope.activeListings = null;
-                $('.search-form input').focus();
+                $scope.$broadcast('focus-field');
+              });
             };
         });
 }());
