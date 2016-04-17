@@ -17,7 +17,7 @@
                         '<img ng-src="{{ ::listing.imageUrl }}" class="thumb">' +
                         '<p class="price">{{ ::listing.price | currency:"$":0 }}</p>' +
                     '</div>' +
-                    '<p class="title">{{ ::listing.name }}</p>' +
+                    '<p class="title"><a href="{{ ::listing.url }}" target="_blank">{{ ::listing.name }}</a></p>' +
                 '</div>' +
             '</section>',
             link: function(scope) {

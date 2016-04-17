@@ -288,6 +288,10 @@ header {
             }
           }
         }
+
+        .listings .listing .title a {
+          color: $blue;
+        }
       }
 
       .listings {
@@ -344,6 +348,10 @@ header {
 
             @media screen and (max-width: 748px) {
               font-size: 0.8em;
+            }
+
+            a {
+              color: $pink;
             }
           }
 

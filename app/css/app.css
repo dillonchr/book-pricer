@@ -192,6 +192,8 @@ header {
         background: #891444; }
         [ng-controller="SearchCtrl"] .results-container .results.sold .graph .bar .fill {
           background: #E5518D; }
+      [ng-controller="SearchCtrl"] .results-container .results.sold .listings .listing .title a {
+        color: #49AEB6; }
     [ng-controller="SearchCtrl"] .results-container .results .listings {
       margin-bottom: 20px;
       display: flex;
@@ -235,6 +237,8 @@ header {
           @media screen and (max-width: 748px) {
             [ng-controller="SearchCtrl"] .results-container .results .listings .listing .title {
               font-size: 0.8em; } }
+          [ng-controller="SearchCtrl"] .results-container .results .listings .listing .title a {
+            color: #E5518D; }
         [ng-controller="SearchCtrl"] .results-container .results .listings .listing.show-title {
           background: white; }
           [ng-controller="SearchCtrl"] .results-container .results .listings .listing.show-title .title {
