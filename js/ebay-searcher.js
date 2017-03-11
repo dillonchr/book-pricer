@@ -1,19 +1,18 @@
 (function() {
     'use strict';
 
-    require('jquery');
+    window.jQuery = window.$ = require('jquery');
     require('angular');
     require('bootstrap');
     require('angular-touch');
     require('moment');
 
-    // require('directive/DropdownCheckbox.js');
-    // require('directive/focus-field.directive.js');
-    // require('directive/infinite-scroll.directive.js');
-    // require('directive/listings.directive.js');
-    // require('service/Search.js');
-
     angular
         .module('ebay-searcher', ['ngTouch'])
-        .controller('SearchCtrl', require('js/ctrl/SearchCtrl'));
+        .controller('SearchCtrl', require('./ctrl/SearchCtrl'))
+        .directive('dropdownCheckbox', require('./directive/DropdownCheckbox'))
+        .directive('focusField', require('./directive/focus-field.directive.js'))
+        .directive('infiniteScroll', require('./directive/infinite-scroll.directive.js'))
+        .directive('listings', require('./directive/listings.directive.js'))
+        .service('Search', require('./service/Search.js'));
 }());

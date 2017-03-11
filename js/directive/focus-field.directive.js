@@ -1,20 +1,15 @@
-(function() {
-  'use strict';
+module.exports = function () {
+    return {
+        link: function (scope, elem, attrs) {
+            scope.$on('focus-field', function () {
+                elem
+                    .click()
+                    .focus();
+            });
 
-  angular.module('ebay-searcher')
-    .directive('focusField', function() {
-      return {
-        link: function(scope, elem, attrs) {
-          scope.$on('focus-field', function() {
-            elem
-              .click()
-              .focus();
-          });
-
-          scope.$on('blur-field', function() {
-            elem.blur();
-          });
+            scope.$on('blur-field', function () {
+                elem.blur();
+            });
         }
-      }
-    });
-}());
+    }
+};
